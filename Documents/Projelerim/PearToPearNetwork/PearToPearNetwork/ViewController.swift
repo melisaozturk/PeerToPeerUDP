@@ -17,7 +17,6 @@ class ViewController: UIViewController {
     }
 
     @IBOutlet weak var tableView: UITableView!
-//    @IBOutlet weak var txtSessionName: UITextField!
     @IBOutlet weak var videoView: UIView!
     
     var results: [NWBrowser.Result] = [NWBrowser.Result]()
@@ -44,7 +43,7 @@ class ViewController: UIViewController {
         }
     }
 //    Gelen video aramasını cevapla
-    func hostAVideoButton() {
+    func hostAVideoCall() {
         // Dismiss the keyboard when the user starts hosting.
         view.endEditing(true)
 
@@ -62,8 +61,7 @@ class ViewController: UIViewController {
             // If your app is not yet listening, start a new listener.
             sharedListener = PeerListener(name: self.name, delegate: self)
         }
-
-        // Show the passcode field once you have started hosting a game.
+        
         sections = [.host, .join]
         tableView.reloadData()
     }
@@ -127,12 +125,17 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             if indexPath.row == 0 {
                 let cell = tableView.cellForRow(at: indexPath) as! HostTableViewCell
                 self.sessionName = cell.txtSessionName.text
-                hostAVideoButton()
+//                TODO: Share your video
+                hostAVideoCall()
             }
         case .join:
             if !results.isEmpty {
                 // Handle the user tapping on a discovered cideo
 //                let result = results[indexPath.row]
+//                TODO: join a video session - see the streaming video
+                #if DEBUG
+                print("You have just joined a session ..")
+                #endif
             }
         }
 
@@ -162,7 +165,6 @@ extension ViewController: PeerBrowserDelegate {
 extension ViewController: PeerConnectionDelegate {
     // When a connection becomes ready, move into video mode.
     func connectionReady() {
-        //        TODO: Start Recording
 
 //        navigationController?.performSegue(withIdentifier: "showGameSegue", sender: nil)
     }
