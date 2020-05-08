@@ -130,8 +130,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "HostCell", for: indexPath)  as! HostTableViewCell
             // Display the results that we've found, if any. Otherwise, show "searching..."
             if results.isEmpty {
-                cell.txtSessionName.placeholder = "Create a Session Name to Host..."
-//                self.name = cell.txtSessionName.text!
+//                cell.txtSessionName.placeholder = "Create a Session Name to Host..."
             }
             return cell
         }
