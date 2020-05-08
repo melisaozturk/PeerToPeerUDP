@@ -52,7 +52,7 @@ class PeerListener {
                 }
             }
             // Set the service to advertise.
-            self.udpListener!.service = NWListener.Service(name: self.name, type: "_tictactoe._tcp")
+            self.udpListener!.service = NWListener.Service(name: self.name, type: "_videoStream._udp")
             
             // Start listening, and request updates on the queue.
             self.udpListener?.start(queue: backgroundQueueUdpListener)
@@ -120,7 +120,7 @@ class PeerListener {
         self.name = name
         if let listener = udpListener {
             // Reset the service to advertise.
-            listener.service = NWListener.Service(name: self.name, type: "_tictactoe._tcp")
+            listener.service = NWListener.Service(name: self.name, type: "_videoStream._udp")
         }
     }
 }
