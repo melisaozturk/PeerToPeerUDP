@@ -8,7 +8,6 @@
 
 import UIKit
 import Network
-import AVFoundation
 
 class ViewController: UIViewController {
     
@@ -18,14 +17,14 @@ class ViewController: UIViewController {
     }
 
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var txtSessionName: UITextField!
+//    @IBOutlet weak var txtSessionName: UITextField!
     @IBOutlet weak var videoView: UIView!
     
     var results: [NWBrowser.Result] = [NWBrowser.Result]()
     var name: String = "Default"
+    var sessionName: String?
     var sections: [VideoFinderSection] = [.host, .join]
     
-    let cameraSession = AVCaptureSession()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +33,6 @@ class ViewController: UIViewController {
         tableView.register(UINib(nibName: "HostTableViewCell", bundle: Bundle.main), forCellReuseIdentifier: "HostCell")
         sharedBrowser = PeerBrowser(delegate: self)
                 
-        cameraSession.sessionPreset = AVCaptureSession.Preset.low
 
     }
     
@@ -51,7 +49,7 @@ class ViewController: UIViewController {
         view.endEditing(true)
 
         // Validate that the user's entered name is not empty.
-        guard let name = txtSessionName.text,
+        guard let name = self.sessionName,
             !name.isEmpty else {
             return
         }
@@ -127,6 +125,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         switch currentSection {
         case .host:
             if indexPath.row == 0 {
+                let cell = tableView.cellForRow(at: indexPath) as! HostTableViewCell
+                self.sessionName = cell.txtSessionName.text
                 hostAVideoButton()
             }
         case .join:
