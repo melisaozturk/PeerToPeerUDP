@@ -51,6 +51,7 @@
                     <connections>
                         <outlet property="tableView" destination="ZZQ-sI-LLE" id="JdH-2h-YqE"/>
                         <outlet property="txtSessionName" destination="dZs-GG-c7K" id="687-O7-w0d"/>
+                        <outlet property="videoView" destination="Uyi-vU-0zc" id="6Vm-sL-X26"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

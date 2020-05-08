@@ -17,29 +17,15 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="f49-9b-tMM">
-                        <rect key="frame" x="0.0" y="0.0" width="327" height="35"/>
+                        <rect key="frame" x="0.0" y="0.0" width="327" height="34"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <textInputTraits key="textInputTraits"/>
                     </textField>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OjA-rg-Mgi">
-                        <rect key="frame" x="150" y="35" width="10" height="40"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="40" id="Yzy-MC-Rmk"/>
-                            <constraint firstAttribute="width" constant="10" id="uDt-Uv-Dhu"/>
-                        </constraints>
-                        <state key="normal" title="Button"/>
-                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstItem="f49-9b-tMM" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="5hc-m2-MK6"/>
-                    <constraint firstItem="OjA-rg-Mgi" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="150" id="BW7-Bv-vCe"/>
-                    <constraint firstItem="OjA-rg-Mgi" firstAttribute="top" secondItem="f49-9b-tMM" secondAttribute="bottom" id="IXC-3u-PxD"/>
-                    <constraint firstAttribute="bottom" secondItem="OjA-rg-Mgi" secondAttribute="bottom" id="IxB-lK-I7S"/>
                     <constraint firstItem="f49-9b-tMM" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="LLk-ZU-1sW"/>
-                    <constraint firstAttribute="bottom" secondItem="OjA-rg-Mgi" secondAttribute="bottom" id="h1z-RR-OSW"/>
-                    <constraint firstItem="OjA-rg-Mgi" firstAttribute="top" secondItem="f49-9b-tMM" secondAttribute="bottom" id="yg5-Bx-P2k"/>
                     <constraint firstAttribute="trailing" secondItem="f49-9b-tMM" secondAttribute="trailing" id="ygC-iO-owO"/>
-                    <constraint firstAttribute="bottom" secondItem="OjA-rg-Mgi" secondAttribute="bottom" id="zSA-4X-1gl"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>

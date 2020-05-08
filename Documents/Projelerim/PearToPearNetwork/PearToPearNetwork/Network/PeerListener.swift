@@ -23,7 +23,6 @@ class PeerListener {
         startListening()
     }
     
-    
     private func startListening() {
         
         do {
@@ -60,29 +59,29 @@ class PeerListener {
                 print(" NWConnection Handler called ")
                 incomingUdpConnection.stateUpdateHandler = { (udpConnectionState) in
                     if let delegate = self.delegate {
-
-                    switch udpConnectionState {
-                    case .setup:
-                        print("Connection:  setup")
-                    case .waiting(let error):
-                        print("Connection:  waiting: \(error)")
-                    case .ready:
-                        print("Connection:  ready")
-                        if sharedConnection == nil {
-                            // Accept a new connection.
-                            sharedConnection = PeerConnection(connection: incomingUdpConnection, delegate: delegate)
-//                            self.processData(incomingUdpConnection)
-                            
-                        } else {
-                            // If a video is already in progress, reject it.
-                            incomingUdpConnection.cancel()
-                        }
-                    case .failed(let error):
-                        print("Connection:  failed: \(error)")
-                    case .cancelled:
-                        print("Connection:    cancelled")
-                    default:
-                        break
+                        
+                        switch udpConnectionState {
+                        case .setup:
+                            print("Connection:  setup")
+                        case .waiting(let error):
+                            print("Connection:  waiting: \(error)")
+                        case .ready:
+                            print("Connection:  ready")
+                            if sharedConnection == nil {
+                                // Accept a new connection.
+                                sharedConnection = PeerConnection(connection: incomingUdpConnection, delegate: delegate)
+                                //                            self.processData(incomingUdpConnection)
+                                
+                            } else {
+                                // If a video is already in progress, reject it.
+                                incomingUdpConnection.cancel()
+                            }
+                        case .failed(let error):
+                            print("Connection:  failed: \(error)")
+                        case .cancelled:
+                            print("Connection:    cancelled")
+                        default:
+                            break
                         }
                     }
                 }
@@ -97,30 +96,30 @@ class PeerListener {
     //    @IBAction func myOffButton(_ sender: Any) {
     //        udpListener?.cancel()
     //    }
-
-//    func processData(_ incomingUdpConnection :NWConnection) {
-//
-//        incomingUdpConnection.receiveMessage(completion: {(data, context, isComplete, error) in
-//
-//            if let data = data, !data.isEmpty {
-//                if let string = String(data: data, encoding: .ascii) {
-//                    print ("DATA       = \(string)")
-//                }
-//            }
-//            //print ("context    = \(context)")
-//            print ("isComplete = \(isComplete)")
-//            //print ("error      = \(error)")
-//
-//            self.processData(incomingUdpConnection)
-//        })
-//
-//    }
-//
-    func resetName(_ name: String) {
-        self.name = name
-        if let listener = udpListener {
-            // Reset the service to advertise.
-            listener.service = NWListener.Service(name: self.name, type: "_videoStream._udp")
-        }
+    
+    func processData(_ incomingUdpConnection :NWConnection) {
+        
+        incomingUdpConnection.receiveMessage(completion: {(data, context, isComplete, error) in
+            
+            if let data = data, !data.isEmpty {
+                if let string = String(data: data, encoding: .ascii) {
+                    print ("DATA       = \(string)")
+                }
+            }
+            //print ("context    = \(context)")
+            print ("isComplete = \(isComplete)")
+            //print ("error      = \(error)")
+            
+            self.processData(incomingUdpConnection)
+        })
+        
     }
+    
+        func resetName(_ name: String) {
+            self.name = name
+            if let listener = udpListener {
+                // Reset the service to advertise.
+                listener.service = NWListener.Service(name: self.name, type: "_videoStream._udp")
+            }
+        }
 }

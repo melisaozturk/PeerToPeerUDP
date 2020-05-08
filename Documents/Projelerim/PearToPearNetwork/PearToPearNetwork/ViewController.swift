@@ -8,6 +8,7 @@
 
 import UIKit
 import Network
+import AVFoundation
 
 class ViewController: UIViewController {
     
@@ -18,11 +19,14 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var txtSessionName: UITextField!
+    @IBOutlet weak var videoView: UIView!
     
     var results: [NWBrowser.Result] = [NWBrowser.Result]()
     var name: String = "Default"
     var sections: [VideoFinderSection] = [.host, .join]
     
+    let cameraSession = AVCaptureSession()
+
     override func viewDidLoad() {
         super.viewDidLoad()
        
@@ -30,6 +34,8 @@ class ViewController: UIViewController {
         tableView.register(UINib(nibName: "HostTableViewCell", bundle: Bundle.main), forCellReuseIdentifier: "HostCell")
         sharedBrowser = PeerBrowser(delegate: self)
                 
+        cameraSession.sessionPreset = AVCaptureSession.Preset.low
+
     }
     
     func resultRows() -> Int {
@@ -62,25 +68,6 @@ class ViewController: UIViewController {
         // Show the passcode field once you have started hosting a game.
         sections = [.host, .join]
         tableView.reloadData()
-    }
-
-    
-    @IBAction func btnJoin(_ sender: Any) {
-        
-//        let actionSheet = UIAlertController(title: "", message: "Do you want to Host or Join a session?", preferredStyle: .actionSheet)
-//
-//                   actionSheet.addAction(UIAlertAction(title: "Host Session", style: .default, handler: { (action:UIAlertAction) in
-//
-//
-//                   }))
-//
-//                   actionSheet.addAction(UIAlertAction(title: "Join Session", style: .default, handler: { (action:UIAlertAction) in
-//
-//                   }))
-//
-//                   actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-//
-//                   self.present(actionSheet, animated: true, completion: nil)
     }
 }
 
@@ -128,10 +115,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         }
         else if currentSection == .host {
             let cell = tableView.dequeueReusableCell(withIdentifier: "HostCell", for: indexPath)  as! HostTableViewCell
-            // Display the results that we've found, if any. Otherwise, show "searching..."
-            if results.isEmpty {
-//                cell.txtSessionName.placeholder = "Create a Session Name to Host..."
-            }
+            cell.textLabel?.text = "HOST"
+            cell.textLabel?.textAlignment = .center
             return cell
         }
         return UITableViewCell()
@@ -147,10 +132,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         case .join:
             if !results.isEmpty {
                 // Handle the user tapping on a discovered cideo
-                let result = results[indexPath.row]
+//                let result = results[indexPath.row]
             }
-        default:
-            print("Tapped inactive row: \(indexPath)")
         }
 
         tableView.deselectRow(at: indexPath, animated: true)
@@ -177,8 +160,10 @@ extension ViewController: PeerBrowserDelegate {
 }
 
 extension ViewController: PeerConnectionDelegate {
-    // When a connection becomes ready, move into game mode.
+    // When a connection becomes ready, move into video mode.
     func connectionReady() {
+        //        TODO: Start Recording
+
 //        navigationController?.performSegue(withIdentifier: "showGameSegue", sender: nil)
     }
 
