@@ -10,7 +10,6 @@
 		1ECF51F9246477C400330B7A /* PeerBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECF51F8246477C400330B7A /* PeerBrowser.swift */; };
 		1ECF51FB246478AF00330B7A /* PeerListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECF51FA246478AF00330B7A /* PeerListener.swift */; };
 		1ECF51FD246479C200330B7A /* PeerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECF51FC246479C200330B7A /* PeerConnection.swift */; };
-		1ECF51FF24647B4D00330B7A /* NWParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECF51FE24647B4D00330B7A /* NWParameters.swift */; };
 		1ECF520124647C6E00330B7A /* VideoProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECF520024647C6E00330B7A /* VideoProtocol.swift */; };
 		1ECF520624648DBE00330B7A /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECF520424648DBE00330B7A /* TableViewCell.swift */; };
 		1ECF520724648DBE00330B7A /* TableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1ECF520524648DBE00330B7A /* TableViewCell.xib */; };
@@ -47,7 +46,6 @@
 		1ECF51F8246477C400330B7A /* PeerBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerBrowser.swift; sourceTree = "<group>"; };
 		1ECF51FA246478AF00330B7A /* PeerListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerListener.swift; sourceTree = "<group>"; };
 		1ECF51FC246479C200330B7A /* PeerConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerConnection.swift; sourceTree = "<group>"; };
-		1ECF51FE24647B4D00330B7A /* NWParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NWParameters.swift; sourceTree = "<group>"; };
 		1ECF520024647C6E00330B7A /* VideoProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoProtocol.swift; sourceTree = "<group>"; };
 		1ECF520424648DBE00330B7A /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		1ECF520524648DBE00330B7A /* TableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableViewCell.xib; sourceTree = "<group>"; };
@@ -111,7 +109,6 @@
 				1ECF51F8246477C400330B7A /* PeerBrowser.swift */,
 				1ECF51FA246478AF00330B7A /* PeerListener.swift */,
 				1ECF51FC246479C200330B7A /* PeerConnection.swift */,
-				1ECF51FE24647B4D00330B7A /* NWParameters.swift */,
 				1ECF520024647C6E00330B7A /* VideoProtocol.swift */,
 			);
 			path = Network;
@@ -308,7 +305,6 @@
 				1EE444DA246323EB00B3D18B /* ViewController.swift in Sources */,
 				1EE444D6246323EB00B3D18B /* AppDelegate.swift in Sources */,
 				1ECF520624648DBE00330B7A /* TableViewCell.swift in Sources */,
-				1ECF51FF24647B4D00330B7A /* NWParameters.swift in Sources */,
 				1ECF51FD246479C200330B7A /* PeerConnection.swift in Sources */,
 				1ECF51FB246478AF00330B7A /* PeerListener.swift in Sources */,
 				1EE444D8246323EB00B3D18B /* SceneDelegate.swift in Sources */,
