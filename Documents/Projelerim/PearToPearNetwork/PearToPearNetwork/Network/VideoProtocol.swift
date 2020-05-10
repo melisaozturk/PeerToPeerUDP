@@ -9,6 +9,10 @@
 import Foundation
 import Network
 
+enum VideoMessageType: UInt32 {
+    case url = 0
+}
+
 // Create a class that implements a framing protocol.
 class VideoProtocol: NWProtocolFramerImplementation {
     
@@ -28,58 +32,80 @@ class VideoProtocol: NWProtocolFramerImplementation {
     // Whenever the application sends a message, add your protocol header and forward the bytes.
     func handleOutput(framer: NWProtocolFramer.Instance, message: NWProtocolFramer.Message, messageLength: Int, isComplete: Bool) {
         // Extract the type of message.
-//        let type = message.videoMessageType
+        let type = message.videoMessageType
 
         // Create a header using the type and length.
-//        let header = VideoProtocolHeader(type: type.rawValue, length: UInt32(messageLength))
-
+        let header = VideoProtocolHeader(type: type.rawValue, length: UInt32(messageLength))
+//
         // Write the header.
-//        framer.writeOutput(data: header.encodedData)
+        framer.writeOutput(data: header.encodedData)
 
         // Ask the connection to insert the content of the application message after your header.
-//        do {
-//            try framer.writeOutputNoCopy(length: messageLength)
-//        } catch let error {
-//            print("Hit error writing \(error)")
-//        }
+        do {
+            try framer.writeOutputNoCopy(length: messageLength)
+        } catch let error {
+            print("Hit error writing \(error)")
+        }
     }
     
     // Whenever new bytes are available to read, try to parse out your message format.
     func handleInput(framer: NWProtocolFramer.Instance) -> Int {
-//        while true {
-//            // Try to read out a single header.
-//            var tempHeader: VideoProtocolHeader? = nil
-//            let headerSize = VideoProtocolHeader.encodedSize
-//            let parsed = framer.parseInput(minimumIncompleteLength: headerSize,
-//                                           maximumLength: headerSize) { (buffer, isComplete) -> Int in
-//                guard let buffer = buffer else {
-//                    return 0
-//                }
-//                if buffer.count < headerSize {
-//                    return 0
-//                }
-//                tempHeader = VideoProtocolHeader(buffer)
-//                return headerSize
-//            }
+        while true {
+            // Try to read out a single header.
+            var tempHeader: VideoProtocolHeader? = nil
+            let headerSize = VideoProtocolHeader.encodedSize
+            let parsed = framer.parseInput(minimumIncompleteLength: headerSize,
+                                           maximumLength: headerSize) { (buffer, isComplete) -> Int in
+                                            guard let buffer = buffer else {
+                                                return 0
+                                            }
+                                            if buffer.count < headerSize {
+                                                return 0
+                                            }
+                                            tempHeader = VideoProtocolHeader(buffer)
+                                            return headerSize
+            }
+            
+            //             If you can't parse out a complete header, stop parsing and ask for headerSize more bytes.
+            guard parsed, let header = tempHeader else {
+                return headerSize
+            }
+            
+            //             Create an object to deliver the message.
+            var messageType = VideoMessageType.url
+            if let parsedMessageType = VideoMessageType(rawValue: header.type) {
+                messageType = parsedMessageType
+            }
+            let message = NWProtocolFramer.Message(videoMessageType: messageType)
+            
+            //             Deliver the body of the message, along with the message object.
+            if !framer.deliverInputNoCopy(length: Int(header.length), message: message, isComplete: true) {
+                return 0
+            }
+        }
+    }
+}
 
-            // If you can't parse out a complete header, stop parsing and ask for headerSize more bytes.
-//            guard parsed, let header = tempHeader else {
-//                return headerSize
-//            }
 
-            // Create an object to deliver the message.
-//            var messageType = VideoMessageType.invalid
-//            if let parsedMessageType = VideoMessageType(rawValue: header.type) {
-//                messageType = parsedMessageType
-//            }
-//            let message = NWProtocolFramer.Message(videoMessageType: messageType)
 
-            // Deliver the body of the message, along with the message object.
-//            if !framer.deliverInputNoCopy(length: Int(header.length), message: message, isComplete: true) {
-//                return 0
-//            }
-//        }
-        return 0
+// Extend framer messages to handle storing your command types in the message metadata.
+extension NWProtocolFramer.Message {
+    convenience init(videoMessageType: VideoMessageType) {
+        self.init(definition: VideoProtocol.definition)
+        self.videoMessageType = videoMessageType
+    }
+
+    var videoMessageType: VideoMessageType {
+        get {
+            if let type = self["VideoMessageType"] as? VideoMessageType {
+                return type
+            } else {
+                return .url
+            }
+        }
+        set {
+            self["VideoMessageType"] = newValue
+        }
     }
 }
 
@@ -120,25 +146,3 @@ struct VideoProtocolHeader: Codable {
         return MemoryLayout<UInt32>.size * 2
     }
 }
-
-
-// Extend framer messages to handle storing your command types in the message metadata.
-//extension NWProtocolFramer.Message {
-//    convenience init(videoMessageType: VideoMessageType) {
-//        self.init(definition: VideoProtocol.definition)
-//        self.videoMessageType = videoMessageType
-//    }
-//
-//    var videoMessageType: VideoMessageType {
-//        get {
-//            if let type = self["VideoMessageType"] as? VideoMessageType {
-//                return type
-//            } else {
-//                return .invalid
-//            }
-//        }
-//        set {
-//            self["VideoMessageType"] = newValue
-//        }
-//    }
-//}

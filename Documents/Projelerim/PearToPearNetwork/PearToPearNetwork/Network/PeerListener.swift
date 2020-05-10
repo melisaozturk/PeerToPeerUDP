@@ -70,7 +70,10 @@ class PeerListener {
                             if sharedConnection == nil {
                                 // Accept a new connection.
                                 sharedConnection = PeerConnection(connection: incomingUdpConnection, delegate: delegate)
-                                //                            self.processData(incomingUdpConnection)
+//                                self.processData(incomingUdpConnection)
+                                #if DEBUG
+                                print("new connection accepted", incomingUdpConnection)
+                                #endif
                                 
                             } else {
                                 // If a video is already in progress, reject it.
@@ -81,7 +84,7 @@ class PeerListener {
                         case .cancelled:
                             print("Connection:    cancelled")
                         default:
-                            break
+                            fatalError()
                         }
                     }
                 }
@@ -97,24 +100,25 @@ class PeerListener {
     //        udpListener?.cancel()
     //    }
     
-    func processData(_ incomingUdpConnection :NWConnection) {
-        
-        incomingUdpConnection.receiveMessage(completion: {(data, context, isComplete, error) in
-            
-            if let data = data, !data.isEmpty {
-                if let string = String(data: data, encoding: .ascii) {
-                    print ("DATA       = \(string)")
-                }
-            }
-            //print ("context    = \(context)")
-            print ("isComplete = \(isComplete)")
-            //print ("error      = \(error)")
-            
-            self.processData(incomingUdpConnection)
-        })
-        
-    }
+//    func processData(_ incomingUdpConnection :NWConnection) {
+//
+//        incomingUdpConnection.receiveMessage(completion: {(data, context, isComplete, error) in
+//
+//            if let data = data, !data.isEmpty {
+//                if let string = String(data: data, encoding: .ascii) {
+//                    print ("DATA       = \(string)")
+//                }
+//            }
+//            //print ("context    = \(context)")
+//            print ("isComplete = \(isComplete)")
+//            //print ("error      = \(error)")
+//
+//            self.processData(incomingUdpConnection)
+//        })
+//
+//    }
     
+    // If the user changes their name, update the advertised name.
         func resetName(_ name: String) {
             self.name = name
             if let listener = udpListener {

@@ -19,11 +19,17 @@ class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var videoView: UIView!
     
+//    @IBOutlet fileprivate var capturePreviewView: UIView!
+    @IBOutlet weak var btnRecord: UIButton!
+    @IBOutlet weak var btnStop: UIButton!
+    @IBOutlet weak var lblStatus: UILabel!
+    
+    let streamController = StreamController()
+    
     var results: [NWBrowser.Result] = [NWBrowser.Result]()
     var name: String = "Default"
     var sessionName: String?
     var sections: [VideoFinderSection] = [.host, .join]
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,44 +38,47 @@ class ViewController: UIViewController {
         tableView.register(UINib(nibName: "HostTableViewCell", bundle: Bundle.main), forCellReuseIdentifier: "HostCell")
         sharedBrowser = PeerBrowser(delegate: self)
                 
-
+        configureCameraController()
+//        styleCaptureButton()
+//        btnRecord.isEnabled = true
+//        btnStop.isEnabled = true
+        lblStatus.text = ""
+        
+       if let connection = sharedConnection {
+            // Take over being the connection delegate from the main view controller.
+            connection.delegate = self
+        }
     }
     
-    func resultRows() -> Int {
-        if results.isEmpty {
-            return 1
-        } else {
-            return min(results.count, 6)
-        }
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
-//    Gelen video aramasını cevapla
-    func hostAVideoCall() {
-        // Dismiss the keyboard when the user starts hosting.
-        view.endEditing(true)
-
-        // Validate that the user's entered name is not empty.
-        guard let name = self.sessionName,
-            !name.isEmpty else {
-            return
-        }
-
-        self.name = name
-        if let listener = sharedListener {
-            // If your app is already listening, just update the name.
-            listener.resetName(name)
-        } else {
-            // If your app is not yet listening, start a new listener.
-            sharedListener = PeerListener(name: self.name, delegate: self)
-        }
+    
+    @IBAction func switchCameras(_ sender: UIButton) {
+           do {
+               try streamController.switchCameras()
+           }
+           catch {
+               print(error)
+           }
+       }
+    
+    @IBAction func btnStopRecording(_ sender: Any) {
+        streamController.stopRecording()
+        //             btnStop.isEnabled = false
+        lblStatus.text = "NOT RECORDING.. RESTART THE APP"
         
-        sections = [.host, .join]
-        tableView.reloadData()
+        if let sharedConnection = sharedConnection {
+            sharedConnection.cancel()
+        }
+        sharedConnection = nil
     }
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
+        
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -125,17 +134,25 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             if indexPath.row == 0 {
                 let cell = tableView.cellForRow(at: indexPath) as! HostTableViewCell
                 self.sessionName = cell.txtSessionName.text
-//                TODO: Share your video
+//                TODO: Share your video - URL göndereceğiz
                 hostAVideoCall()
+                startHosting()
+                if let sharedConnection = sharedConnection, streamController.recordingURL != nil {
+                    sharedConnection.sendUDP(streamController.recordingURL!.absoluteString)
+                }
             }
         case .join:
             if !results.isEmpty {
                 // Handle the user tapping on a discovered cideo
 //                let result = results[indexPath.row]
 //                TODO: join a video session - see the streaming video
-                #if DEBUG
-                print("You have just joined a session ..")
-                #endif
+                if let sharedConnection = sharedConnection {
+                    sharedConnection.receiveUDP()
+
+                    #if DEBUG
+                    print("You have just joined a session ..")
+                    #endif
+                }
             }
         }
 
@@ -165,11 +182,79 @@ extension ViewController: PeerBrowserDelegate {
 extension ViewController: PeerConnectionDelegate {
     // When a connection becomes ready, move into video mode.
     func connectionReady() {
-
+        #if DEBUG
+        print("connection is ready")
+        #endif
 //        navigationController?.performSegue(withIdentifier: "showGameSegue", sender: nil)
     }
 
-    // Ignore connection failures and messages prior to starting a game.
+    // Ignore connection failures and messages prior to starting a video.
     func connectionFailed() { }
     func receivedMessage(content: Data?, message: NWProtocolFramer.Message) { }
 }
+
+// MARK: Video Record
+extension ViewController {
+    
+    private func startHosting() {
+        streamController.startRecording(view: self.videoView)
+//        btnRecord.isEnabled = false
+        lblStatus.text = "RECORDING.."
+    }
+     //     prepares our camera controller like we designed it to
+     func configureCameraController() {
+         streamController.prepare {(error) in
+             if let error = error {
+                 print(error)
+             }
+         }
+         self.streamController.displayPreview(on: self.videoView)
+     }
+     
+    
+//     private func styleCaptureButton() {
+//         btnRecord.layer.borderColor = UIColor.black.cgColor
+//         btnRecord.layer.borderWidth = 2
+//         btnRecord.layer.cornerRadius = min(btnRecord.frame.width, btnRecord.frame.height) / 2
+//
+//         btnStop.layer.borderColor = UIColor.black.cgColor
+//         btnStop.layer.borderWidth = 2
+//         btnStop.layer.cornerRadius = min(btnStop.frame.width, btnStop.frame.height) / 2
+//     }
+}
+
+//MARK: NETWROK - UDP
+extension ViewController {
+    
+    func resultRows() -> Int {
+        if results.isEmpty {
+            return 1
+        } else {
+            return min(results.count, 6)
+        }
+    }
+    
+    func hostAVideoCall() {
+        // Dismiss the keyboard when the user starts hosting.
+        view.endEditing(true)
+
+        // Validate that the user's entered name is not empty.
+        guard let name = self.sessionName,
+            !name.isEmpty else {
+                return
+        }
+        
+        self.name = name
+        if let listener = sharedListener {
+            // If your app is already listening, just update the name.
+            listener.resetName(name)
+        } else {
+            // If your app is not yet listening, start a new listener.
+            sharedListener = PeerListener(name: self.name, delegate: self)
+        }
+        
+        sections = [.host, .join]
+        tableView.reloadData()
+    }
+}
+

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E8B889524677FB20092B22D /* StreamController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8B889424677FB20092B22D /* StreamController.swift */; };
 		1ECF51F9246477C400330B7A /* PeerBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECF51F8246477C400330B7A /* PeerBrowser.swift */; };
 		1ECF51FB246478AF00330B7A /* PeerListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECF51FA246478AF00330B7A /* PeerListener.swift */; };
 		1ECF51FD246479C200330B7A /* PeerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECF51FC246479C200330B7A /* PeerConnection.swift */; };
@@ -43,6 +44,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1E8B889424677FB20092B22D /* StreamController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamController.swift; sourceTree = "<group>"; };
 		1ECF51F8246477C400330B7A /* PeerBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerBrowser.swift; sourceTree = "<group>"; };
 		1ECF51FA246478AF00330B7A /* PeerListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerListener.swift; sourceTree = "<group>"; };
 		1ECF51FC246479C200330B7A /* PeerConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerConnection.swift; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 				1EE444D5246323EB00B3D18B /* AppDelegate.swift */,
 				1EE444D7246323EB00B3D18B /* SceneDelegate.swift */,
 				1EE444D9246323EB00B3D18B /* ViewController.swift */,
+				1E8B889424677FB20092B22D /* StreamController.swift */,
 				1EE444DB246323EB00B3D18B /* Main.storyboard */,
 				1EE444DE246323ED00B3D18B /* Assets.xcassets */,
 				1EE444E0246323ED00B3D18B /* LaunchScreen.storyboard */,
@@ -305,6 +308,7 @@
 				1EE444DA246323EB00B3D18B /* ViewController.swift in Sources */,
 				1EE444D6246323EB00B3D18B /* AppDelegate.swift in Sources */,
 				1ECF520624648DBE00330B7A /* TableViewCell.swift in Sources */,
+				1E8B889524677FB20092B22D /* StreamController.swift in Sources */,
 				1ECF51FD246479C200330B7A /* PeerConnection.swift in Sources */,
 				1ECF51FB246478AF00330B7A /* PeerListener.swift in Sources */,
 				1EE444D8246323EB00B3D18B /* SceneDelegate.swift in Sources */,

@@ -14,11 +14,11 @@ var sharedConnection: PeerConnection?
 protocol PeerConnectionDelegate: class {
     func connectionReady()
     func connectionFailed()
-    func receivedMessage(content: Data?, message: NWProtocolFramer.Message)
+    func receivedMessage(content: Data?, message: NWProtocolFramer.Message)//NWProtocolFramer.Message)
 }
 
 class PeerConnection {
-    
+    //        connection = NWConnection(host: "192.168.4.1", port: 4210, using: .udp)
     var connection: NWConnection?
     let initiatedConnection: Bool
     weak var delegate: PeerConnectionDelegate?
@@ -29,7 +29,7 @@ class PeerConnection {
     init(endpoint: NWEndpoint, interface: NWInterface?, delegate: PeerConnectionDelegate) {
         self.delegate = delegate
         self.initiatedConnection = true
-
+        
         startConnection()
         
     }
@@ -39,18 +39,18 @@ class PeerConnection {
         self.delegate = delegate
         self.connection = connection
         self.initiatedConnection = false
-
+        
         startConnection()
     }
     
     // Handle the user exiting the video.
-    func cancel() {
-        if let connection = self.connection {
-            connection.cancel()
-            self.connection = nil
-        }
-    }
-
+    //    func cancel() {
+    //        if let connection = self.connection {
+    //            connection.cancel()
+    //            self.connection = nil
+    //        }
+    //    }
+    
     // Handle starting the peer-to-peer connection for both inbound and outbound connections.
     func startConnection() {
         // Hack to wait until everything is set up
@@ -58,14 +58,19 @@ class PeerConnection {
         while(x<1000000000) {
             x+=1
         }
-//        connection = NWConnection(host: "192.168.4.1", port: 4210, using: .udp)
         connectToUDP(hostUDP,portUDP)
     }
-    
+    // Handle the user exiting the game.
+    func cancel() {
+        if let connection = self.connection {
+            connection.cancel()
+            self.connection = nil
+        }
+    }
     func connectToUDP(_ hostUDP: NWEndpoint.Host, _ portUDP: NWEndpoint.Port) {
         // Transmited message:
-        let messageToUDP = "Test message"
-       
+//        let messageToUDP = "Test message"
+        
         self.connection = NWConnection(host: hostUDP, port: portUDP, using: .udp)
         
         self.connection?.stateUpdateHandler = { (newState) in
@@ -73,9 +78,7 @@ class PeerConnection {
             switch (newState) {
             case .ready:
                 print("State: Ready\n")
-                self.sendUDP(messageToUDP)
-//                self.sendUDP(data)
-                self.receiveUDP()
+                //                self.sendUDP(data)
                 // Notify your delegate that the connection is ready.
                 if let delegate = self.delegate {
                     delegate.connectionReady()
@@ -90,7 +93,7 @@ class PeerConnection {
                 // Cancel the connection upon a failure.
                 guard let connection = self.connection else {return}
                 connection.cancel()
-
+                
                 // Notify your delegate that the connection failed.
                 if let delegate = self.delegate {
                     delegate.connectionFailed()
@@ -101,29 +104,46 @@ class PeerConnection {
         }
         
         self.connection?.start(queue: .global())
+        connection!.receiveMessage { (data, context, isComplete, error) in
+            print("Got it")
+        }
     }
     
     // Handle sending a "video message".
-    func sendUDP(_ content: Data) {
-        self.connection?.send(content: content, completion: NWConnection.SendCompletion.contentProcessed(({ (NWError) in
-            if (NWError == nil) {
-                print("Data was sent to UDP")
-            } else {
-                print("ERROR! Error when data (Type: Data) sending. NWError: \n \(NWError!)")
-            }
-        })))
-    }
+    //    func sendUDP(_ content: Data) {
+    //        self.connection?.send(content: content, completion: NWConnection.SendCompletion.contentProcessed(({ (NWError) in
+    //            if (NWError == nil) {
+    //                print("Data was sent to UDP")
+    //            } else {
+    //                print("ERROR! Error when data (Type: Data) sending. NWError: \n \(NWError!)")
+    //            }
+    //        })))
+    //    }
     
     // Handle sending a "string message".
     func sendUDP(_ content: String) {
-        let contentToSendUDP = content.data(using: String.Encoding.utf8)
-        self.connection?.send(content: contentToSendUDP, completion: NWConnection.SendCompletion.contentProcessed(({ (NWError) in
-            if (NWError == nil) {
-                print("Data was sent to UDP")
-            } else {
-                print("ERROR! Error when data (Type: Data) sending. NWError: \n \(NWError!)")
-            }
-        })))
+        guard let connection = connection else {
+            return
+        }
+        
+        // Create a message object to hold the command type.
+        let message = NWProtocolFramer.Message(videoMessageType: .url)
+        let context = NWConnection.ContentContext(identifier: "Move",
+                                                  metadata: [message])
+        
+        // Send the application content along with the message.
+        connection.send(content: content.data(using: .unicode), contentContext: context, isComplete: true, completion: .idempotent)
+        
+        
+        
+        //        let contentToSendUDP = content.data(using: String.Encoding.utf8)
+        //        self.connection?.send(content: contentToSendUDP, completion: NWConnection.SendCompletion.contentProcessed(({ (NWError) in
+        //            if (NWError == nil) {
+        //                print("Data was sent to UDP")
+        //            } else {
+        //                print("ERROR! Error when data (Type: Data) sending. NWError: \n \(NWError!)")
+        //            }
+        //        })))
     }
     
     // Receive a message, deliver it to your delegate, and continue receiving more messages.
@@ -131,24 +151,57 @@ class PeerConnection {
         guard let connection = connection else {
             return
         }
-        connection.receiveMessage { (data, context, isComplete, error) in
-            if (isComplete) {
-                print("Receive is complete")
-                if (data != nil) {
-                    
-                    // Extract your message type from the received context.
-                    if let videoMessage = context?.protocolMetadata(definition: VideoProtocol.definition) as? NWProtocolFramer.Message {
-                        self.delegate?.receivedMessage(content: data, message: videoMessage)
-                    }
-                    
-                    //                    let backToString = String(decoding: data!, as: UTF8.self)
-                    //                    print("Received message: \(backToString)")
-                    
-                    if error == nil {
-                        // Continue to receive more messages until you receive and error.
-                        self.receiveUDP()
-                    }
-                }
+        
+        
+        connection.receiveMessage { (content, context, isComplete, error) in
+            // Extract your message type from the received context.
+            if let videoMessage = context?.protocolMetadata(definition: VideoProtocol.definition) as? NWProtocolFramer.Message {
+                self.delegate?.receivedMessage(content: content, message: videoMessage)
+            }
+            if error == nil {
+                // Continue to receive more messages until you receive and error.
+                self.receiveNextMessage()
+            }
+        }
+    }
+    
+    
+    //        connection.receiveMessage { (data, context, isComplete, error) in
+    //            if (isComplete) {
+    //                print("Receive is complete")
+    //                if (data != nil) {
+    ////                    let backToString = String(decoding: data!, as: UTF8.self)
+    //                    //                    print("Received message: \(backToString)")
+    //
+    //                    // Extract your message type from the received context.
+    //                    if let videoMessage = context?.protocolMetadata(definition: VideoProtocol.definition) as? NWProtocolFramer.Message {
+    //                        self.delegate?.receivedMessage(content: data, message: videoMessage)
+    ////                    }
+    //
+    //                    if error == nil {
+    //                        // Continue to receive more messages until you receive and error.
+    //                        self.receiveUDP()
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
+    
+    // Receive a message, deliver it to your delegate, and continue receiving more messages.
+    func receiveNextMessage() {
+        //            guard let connection = connection else {
+        //                       return
+        //                   }
+        //
+        
+        connection!.receiveMessage { (content, context, isComplete, error) in
+            // Extract your message type from the received context.
+            if let videoMessage = context?.protocolMetadata(definition: VideoProtocol.definition) as? NWProtocolFramer.Message {
+                self.delegate?.receivedMessage(content: content, message: videoMessage)
+            }
+            if error == nil {
+                // Continue to receive more messages until you receive and error.
+                self.receiveNextMessage()
             }
         }
     }
