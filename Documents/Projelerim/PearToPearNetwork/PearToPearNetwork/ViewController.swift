@@ -24,13 +24,13 @@ class ViewController: UIViewController {
     @IBOutlet weak var lblStatus: UILabel!
     
     let streamController = StreamController()
-    
+    var viewController: ViewController?
+
     var results: [NWBrowser.Result] = [NWBrowser.Result]()
     var name: String = "Default"
     var sessionName: String?
     var sections: [VideoFinderSection] = [.host, .join]
-    var connected : Bool?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
        
@@ -44,12 +44,6 @@ class ViewController: UIViewController {
             btnStop.isEnabled = false
         } else {
             btnStop.isEnabled = true
-        }
-        
-       if let connection = sharedConnection {
-            // Take over being the connection delegate from the main view controller.
-        connection.delegate = self
-        self.connected = connection.initiatedConnection
         }
     }
     
@@ -77,6 +71,7 @@ class ViewController: UIViewController {
         }
         sharedConnection = nil
     }
+    
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
@@ -114,6 +109,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.lblInfo.text = "Searching for videos..."
             } else {
                 let peerEndpoint = results[indexPath.row].endpoint
+                
                 if case let NWEndpoint.service(name: name, type: _, domain: _, interface: _) = peerEndpoint {
                     cell.lblInfo.text = name
                 } else {
@@ -132,6 +128,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
         let currentSection = sections[indexPath.section]
         switch currentSection {
         case .host:
@@ -142,7 +139,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 if !sessionName!.isEmpty {
                     hostAVideoCall()
                     startHosting()
-                    
+//                    ???: video kaydı sonlandırılınca path alabiliyoruz. o yüzden burada görüntü gönderemiyoruz ???? path gidiyor
                     if  streamController.recordingURL != nil {
                         sharedConnection?.sendUDP(streamController.recordingURL!.absoluteString)
                     }
@@ -152,10 +149,16 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             if !results.isEmpty {
                 // Handle the user tapping on a discovered cideo
 //                join a video session - see the streaming video
-                sharedConnection!.receiveUDP()
+               let result = results[indexPath.row]
+                    sharedConnection = PeerConnection(endpoint: result.endpoint,
+                                                      interface:  result.interfaces.first,
+                                                          delegate: self)
+                    sharedConnection!.receiveUDP()
+                    
                     #if DEBUG
                     print("You have just joined a session ..")
                     #endif
+                
             }
         }
 

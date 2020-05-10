@@ -29,8 +29,8 @@ class PeerConnection {
         self.delegate = delegate
         self.initiatedConnection = true
         
-        let connection = NWConnection(to: endpoint, using: .udp)
-        self.connection = connection
+//        let connection = NWConnection(to: endpoint, using: .udp)
+//        self.connection = connection
 
         startConnection()
         
@@ -62,7 +62,8 @@ class PeerConnection {
         }
     }
     func connectToUDP(_ hostUDP: NWEndpoint.Host, _ portUDP: NWEndpoint.Port) {
-        self.connection = NWConnection(host: hostUDP, port: portUDP, using: .udp)
+        let connection = NWConnection(host: hostUDP, port: portUDP, using: .udp)
+        self.connection = connection
         
         self.connection?.stateUpdateHandler = { (newState) in
             print("This is stateUpdateHandler:")
@@ -95,7 +96,7 @@ class PeerConnection {
         }
         
         self.connection?.start(queue: .global())
-        connection!.receiveMessage { (data, context, isComplete, error) in
+        connection.receiveMessage { (data, context, isComplete, error) in
             print("Got it")
         }
     }
