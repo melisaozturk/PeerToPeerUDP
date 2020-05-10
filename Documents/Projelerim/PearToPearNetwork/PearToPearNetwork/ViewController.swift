@@ -42,7 +42,7 @@ class ViewController: UIViewController {
 //        styleCaptureButton()
 //        btnRecord.isEnabled = true
 //        btnStop.isEnabled = true
-        lblStatus.text = ""
+        lblStatus.text = "NOT RECORDING"
         
        if let connection = sharedConnection {
             // Take over being the connection delegate from the main view controller.
@@ -66,7 +66,7 @@ class ViewController: UIViewController {
     @IBAction func btnStopRecording(_ sender: Any) {
         streamController.stopRecording()
         //             btnStop.isEnabled = false
-        lblStatus.text = "NOT RECORDING.. RESTART THE APP"
+        lblStatus.text = "NOT RECORDING.. SESSION IS OVER.. RESTART THE APP"
         
         if let sharedConnection = sharedConnection {
             sharedConnection.cancel()
@@ -143,12 +143,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             }
         case .join:
             if !results.isEmpty {
+//                let cell = tableView.cellForRow(at: indexPath) as! TableViewCell
                 // Handle the user tapping on a discovered cideo
 //                let result = results[indexPath.row]
 //                TODO: join a video session - see the streaming video
                 if let sharedConnection = sharedConnection {
                     sharedConnection.receiveUDP()
-
                     #if DEBUG
                     print("You have just joined a session ..")
                     #endif
