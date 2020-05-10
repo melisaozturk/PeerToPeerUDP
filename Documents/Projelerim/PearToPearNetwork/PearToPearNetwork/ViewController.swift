@@ -19,9 +19,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var videoView: UIView!
     
-//    @IBOutlet fileprivate var capturePreviewView: UIView!
-    @IBOutlet weak var btnRecord: UIButton!
-    @IBOutlet weak var btnStop: UIButton!
     @IBOutlet weak var lblStatus: UILabel!
     
     let streamController = StreamController()
@@ -39,9 +36,6 @@ class ViewController: UIViewController {
         sharedBrowser = PeerBrowser(delegate: self)
                 
         configureCameraController()
-//        styleCaptureButton()
-//        btnRecord.isEnabled = true
-//        btnStop.isEnabled = true
         lblStatus.text = "NOT RECORDING"
         
        if let connection = sharedConnection {
@@ -65,11 +59,10 @@ class ViewController: UIViewController {
     
     @IBAction func btnStopRecording(_ sender: Any) {
         streamController.stopRecording()
-        //             btnStop.isEnabled = false
         lblStatus.text = "NOT RECORDING.. SESSION IS OVER.. RESTART THE APP"
         
         if let sharedConnection = sharedConnection {
-            sharedConnection.cancel()
+            sharedConnection.cancel()            
         }
         sharedConnection = nil
     }
@@ -134,7 +127,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             if indexPath.row == 0 {
                 let cell = tableView.cellForRow(at: indexPath) as! HostTableViewCell
                 self.sessionName = cell.txtSessionName.text
-//                TODO: Share your video - URL göndereceğiz
+//               Share your video - URL göndereceğiz
                 if !sessionName!.isEmpty {
                     hostAVideoCall()
                     startHosting()
@@ -148,7 +141,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 //                let cell = tableView.cellForRow(at: indexPath) as! TableViewCell
                 // Handle the user tapping on a discovered cideo
 //                let result = results[indexPath.row]
-//                TODO: join a video session - see the streaming video
+//                join a video session - see the streaming video
                 if let sharedConnection = sharedConnection {
                     sharedConnection.receiveUDP()
                     #if DEBUG
@@ -183,13 +176,7 @@ extension ViewController: PeerBrowserDelegate {
 
 extension ViewController: PeerConnectionDelegate {
     // When a connection becomes ready, move into video mode.
-    func connectionReady() {
-        #if DEBUG
-        print("connection is ready")
-        #endif
-//        navigationController?.performSegue(withIdentifier: "showGameSegue", sender: nil)
-    }
-
+    func connectionReady() {}
     // Ignore connection failures and messages prior to starting a video.
     func connectionFailed() { }
     func receivedMessage(content: Data?, message: NWProtocolFramer.Message) { }
@@ -200,7 +187,6 @@ extension ViewController {
     
     private func startHosting() {
         streamController.startRecording(view: self.videoView)
-//        btnRecord.isEnabled = false
         lblStatus.text = "RECORDING.."
     }
      //     prepares our camera controller like we designed it to
@@ -213,16 +199,6 @@ extension ViewController {
          self.streamController.displayPreview(on: self.videoView)
      }
      
-    
-//     private func styleCaptureButton() {
-//         btnRecord.layer.borderColor = UIColor.black.cgColor
-//         btnRecord.layer.borderWidth = 2
-//         btnRecord.layer.cornerRadius = min(btnRecord.frame.width, btnRecord.frame.height) / 2
-//
-//         btnStop.layer.borderColor = UIColor.black.cgColor
-//         btnStop.layer.borderWidth = 2
-//         btnStop.layer.cornerRadius = min(btnStop.frame.width, btnStop.frame.height) / 2
-//     }
 }
 
 //MARK: NETWROK - UDP

@@ -43,6 +43,7 @@ class PeerListener {
                     print("Listener:  Ready and listens on port: \(self.udpListener?.port?.debugDescription ?? "-")")
                 case .failed(let error):
                     print("Listener: Failed \(error)")
+                    self.udpListener!.cancel()
                 case .cancelled:
                     print("Listener:    Cancelled by myOffButton")
                 default:

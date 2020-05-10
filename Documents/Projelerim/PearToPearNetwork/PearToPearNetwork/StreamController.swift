@@ -202,9 +202,7 @@ extension StreamController {
     }
     
     func displayPreview(on view: UIView) {
-        
-        if !session.isRunning {print(CameraControllerError.captureSessionIsMissing) }
-        
+                
         self.previewLayer = AVCaptureVideoPreviewLayer(session: session)
         self.previewLayer!.videoGravity = AVLayerVideoGravity.resizeAspectFill
         self.previewLayer!.connection?.videoOrientation = .portrait
@@ -213,7 +211,6 @@ extension StreamController {
         rootLayer.masksToBounds = true
         rootLayer.insertSublayer(self.previewLayer!, at: 0)
         self.previewLayer?.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.height)
-
     }
     
     
@@ -234,10 +231,10 @@ extension StreamController {
         
         self.assetWriter?.finishWriting {
             print("Saved in folder \(self.recordingURL!)")
+            self.session.stopRunning()
             try? PHPhotoLibrary.shared().performChangesAndWait {
                 PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: self.recordingURL!)
             }
-            //            exit(0)
         }
     }
     func captureOutput(_ captureOutput: AVCaptureOutput, didOutput

@@ -32,7 +32,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "102"
             endingLineNumber = "102"
-            landmarkName = "connectToUDP(_:_:)"
+            landmarkName = "sendUDP(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -64,7 +64,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "55"
             endingLineNumber = "55"
-            landmarkName = "startConnection()"
+            landmarkName = "cancel()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -78,8 +78,8 @@
             filePath = "PearToPearNetwork/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "147"
-            endingLineNumber = "147"
+            startingLineNumber = "146"
+            endingLineNumber = "146"
             landmarkName = "tableView(_:didSelectRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -162,38 +162,6 @@
             endingLineNumber = "58"
             landmarkName = "startListening()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "DFB2F60E-8809-403D-8669-7343C4D26349 - ece625bdb699d93d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "PearToPearNetwork.PeerListener.(startListening in _8E5E46A1E6E6F02795279E66E5F84BBC)() -&gt; ()"
-                  moduleName = "PearToPearNetwork"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/melisaozturk/Documents/Projelerim/PearToPearNetwork/PearToPearNetwork/Network/PeerListener.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "58"
-                  endingLineNumber = "58"
-                  offsetFromSymbolStart = "1276">
-               </Location>
-               <Location
-                  uuid = "DFB2F60E-8809-403D-8669-7343C4D26349 - 4092e0282d70431e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 (Network.NWConnection) -&gt; () in PearToPearNetwork.PeerListener.(startListening in _8E5E46A1E6E6F02795279E66E5F84BBC)() -&gt; ()"
-                  moduleName = "PearToPearNetwork"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/melisaozturk/Documents/Projelerim/PearToPearNetwork/PearToPearNetwork/Network/PeerListener.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "59"
-                  endingLineNumber = "59"
-                  offsetFromSymbolStart = "104">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -279,22 +247,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "1D2D26C5-AA19-46CF-AFBC-ADA9288828A1"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PearToPearNetwork/Network/PeerConnection.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "121"
-            endingLineNumber = "121"
-            landmarkName = "PeerConnection"
-            landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "7F95AF5A-2954-428E-B1CF-5AF98A551332"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -306,38 +258,6 @@
             endingLineNumber = "75"
             landmarkName = "connectToUDP(_:_:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "7F95AF5A-2954-428E-B1CF-5AF98A551332 - 678558352d03ec11"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "PearToPearNetwork.PeerConnection.connectToUDP(Network.NWEndpoint.Host, Network.NWEndpoint.Port) -&gt; ()"
-                  moduleName = "PearToPearNetwork"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/melisaozturk/Documents/Projelerim/PearToPearNetwork/PearToPearNetwork/Network/PeerConnection.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "76"
-                  endingLineNumber = "76"
-                  offsetFromSymbolStart = "424">
-               </Location>
-               <Location
-                  uuid = "7F95AF5A-2954-428E-B1CF-5AF98A551332 - 73a8dbafb6ba2161"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Network.NWConnection.State) -&gt; () in PearToPearNetwork.PeerConnection.connectToUDP(Network.NWEndpoint.Host, Network.NWEndpoint.Port) -&gt; ()"
-                  moduleName = "PearToPearNetwork"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/melisaozturk/Documents/Projelerim/PearToPearNetwork/PearToPearNetwork/Network/PeerConnection.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "77"
-                  endingLineNumber = "77"
-                  offsetFromSymbolStart = "116">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -414,42 +334,8 @@
             filePath = "PearToPearNetwork/Network/PeerConnection.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "156"
-            endingLineNumber = "156"
-            landmarkName = "receiveUDP()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "D76E2F48-44C2-4660-B3A4-8020B4AB6AE4 - c87b2f06831cab8d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "PearToPearNetwork.PeerConnection.receiveUDP() -&gt; ()"
-                  moduleName = "PearToPearNetwork"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/melisaozturk/Documents/Projelerim/PearToPearNetwork/PearToPearNetwork/Network/PeerConnection.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "156"
-                  endingLineNumber = "156"
-                  offsetFromSymbolStart = "148">
-               </Location>
-               <Location
-                  uuid = "D76E2F48-44C2-4660-B3A4-8020B4AB6AE4 - cc29e0773b65dbaf"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;Network.NWConnection.ContentContext&gt;, Swift.Bool, Swift.Optional&lt;Network.NWError&gt;) -&gt; () in PearToPearNetwork.PeerConnection.receiveUDP() -&gt; ()"
-                  moduleName = "PearToPearNetwork"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/melisaozturk/Documents/Projelerim/PearToPearNetwork/PearToPearNetwork/Network/PeerConnection.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "158"
-                  endingLineNumber = "158"
-                  offsetFromSymbolStart = "204">
-               </Location>
-            </Locations>
+            startingLineNumber = "149"
+            endingLineNumber = "149">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -462,8 +348,8 @@
             filePath = "PearToPearNetwork/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "133"
-            endingLineNumber = "133"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
             landmarkName = "tableView(_:didSelectRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -478,10 +364,10 @@
             filePath = "PearToPearNetwork/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "123"
-            endingLineNumber = "123"
-            landmarkName = "tableView(_:cellForRowAt:)"
-            landmarkType = "7">
+            startingLineNumber = "122"
+            endingLineNumber = "122"
+            landmarkName = "ViewController"
+            landmarkType = "21">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -496,7 +382,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "130"
             endingLineNumber = "130"
-            landmarkName = "sendUDP(_:)"
+            landmarkName = "receiveUDP()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -512,7 +398,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "125"
             endingLineNumber = "125"
-            landmarkName = "sendUDP(_:)"
+            landmarkName = "receiveUDP()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
