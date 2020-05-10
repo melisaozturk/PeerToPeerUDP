@@ -135,10 +135,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 let cell = tableView.cellForRow(at: indexPath) as! HostTableViewCell
                 self.sessionName = cell.txtSessionName.text
 //                TODO: Share your video - URL göndereceğiz
-                hostAVideoCall()
-                startHosting()
-                if let sharedConnection = sharedConnection, streamController.recordingURL != nil {
-                    sharedConnection.sendUDP(streamController.recordingURL!.absoluteString)
+                if !sessionName!.isEmpty {
+                    hostAVideoCall()
+                    startHosting()
+                    if let sharedConnection = sharedConnection, streamController.recordingURL != nil {
+                        sharedConnection.sendUDP(streamController.recordingURL!.absoluteString)
+                    }
                 }
             }
         case .join:
