@@ -29,6 +29,9 @@ class PeerConnection {
         self.delegate = delegate
         self.initiatedConnection = true
         
+        let connection = NWConnection(to: endpoint, using: .udp)
+        self.connection = connection
+
         startConnection()
         
     }
@@ -66,7 +69,7 @@ class PeerConnection {
             switch (newState) {
             case .ready:
                 print("State: Ready\n")
-                //                self.sendUDP(data)
+                self.receiveNextMessage()
                 // Notify your delegate that the connection is ready.
                 if let delegate = self.delegate {
                     delegate.connectionReady()
@@ -117,7 +120,6 @@ class PeerConnection {
         guard let connection = connection else {
             return
         }
-        
         
         connection.receiveMessage { (content, context, isComplete, error) in
             // Extract your message type from the received context.

@@ -8,6 +8,7 @@
 
 import UIKit
 import Network
+import AVKit
 
 class ViewController: UIViewController {
     
@@ -18,6 +19,7 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var videoView: UIView!
+    @IBOutlet weak var btnStop: UIButton!
     
     @IBOutlet weak var lblStatus: UILabel!
     
@@ -27,7 +29,8 @@ class ViewController: UIViewController {
     var name: String = "Default"
     var sessionName: String?
     var sections: [VideoFinderSection] = [.host, .join]
-
+    var connected : Bool?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
        
@@ -37,12 +40,19 @@ class ViewController: UIViewController {
                 
         configureCameraController()
         lblStatus.text = "NOT RECORDING"
+        if sharedListener == nil {
+            btnStop.isEnabled = false
+        } else {
+            btnStop.isEnabled = true
+        }
         
        if let connection = sharedConnection {
             // Take over being the connection delegate from the main view controller.
-            connection.delegate = self
+        connection.delegate = self
+        self.connected = connection.initiatedConnection
         }
     }
+    
     
     override var prefersStatusBarHidden: Bool {
         return true
@@ -60,6 +70,7 @@ class ViewController: UIViewController {
     @IBAction func btnStopRecording(_ sender: Any) {
         streamController.stopRecording()
         lblStatus.text = "NOT RECORDING.. SESSION IS OVER.. RESTART THE APP"
+        btnStop.isEnabled = false
         
         if let sharedConnection = sharedConnection {
             sharedConnection.cancel()            
@@ -131,23 +142,20 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 if !sessionName!.isEmpty {
                     hostAVideoCall()
                     startHosting()
-                    if let sharedConnection = sharedConnection, streamController.recordingURL != nil {
-                        sharedConnection.sendUDP(streamController.recordingURL!.absoluteString)
+                    
+                    if  streamController.recordingURL != nil {
+                        sharedConnection?.sendUDP(streamController.recordingURL!.absoluteString)
                     }
                 }
             }
         case .join:
             if !results.isEmpty {
-//                let cell = tableView.cellForRow(at: indexPath) as! TableViewCell
                 // Handle the user tapping on a discovered cideo
-//                let result = results[indexPath.row]
 //                join a video session - see the streaming video
-                if let sharedConnection = sharedConnection {
-                    sharedConnection.receiveUDP()
+                sharedConnection!.receiveUDP()
                     #if DEBUG
                     print("You have just joined a session ..")
                     #endif
-                }
             }
         }
 
@@ -178,8 +186,24 @@ extension ViewController: PeerConnectionDelegate {
     // When a connection becomes ready, move into video mode.
     func connectionReady() {}
     // Ignore connection failures and messages prior to starting a video.
-    func connectionFailed() { }
-    func receivedMessage(content: Data?, message: NWProtocolFramer.Message) { }
+    func connectionFailed() {}
+    func receivedMessage(content: Data?, message: NWProtocolFramer.Message) {
+        guard let content = content else {
+            return
+        }
+        switch message.videoMessageType {
+        case .url:
+            if let url = String(data: content, encoding: .unicode) {
+//                todo: // datayı ekranda göster
+                let videoURL = URL(string: url)
+                let player = AVPlayer(url: videoURL!)
+                let playerLayer = AVPlayerLayer(player: player)
+                playerLayer.frame = self.view.bounds
+                self.view.layer.addSublayer(playerLayer)
+                player.play()
+            }
+        }
+    }
 }
 
 // MARK: Video Record
@@ -188,6 +212,7 @@ extension ViewController {
     private func startHosting() {
         streamController.startRecording(view: self.videoView)
         lblStatus.text = "RECORDING.."
+        btnStop.isEnabled = true
     }
      //     prepares our camera controller like we designed it to
      func configureCameraController() {

@@ -87,6 +87,7 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="btnStop" destination="6C0-h0-7I1" id="udf-xv-jbs"/>
                         <outlet property="lblStatus" destination="fLG-Zh-nyF" id="Vpg-5z-2M3"/>
                         <outlet property="tableView" destination="ZZQ-sI-LLE" id="JdH-2h-YqE"/>
                         <outlet property="videoView" destination="Uyi-vU-0zc" id="6Vm-sL-X26"/>

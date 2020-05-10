@@ -11,12 +11,15 @@ import Network
 var sharedListener: PeerListener?
 
 class PeerListener {
-    var udpListener:NWListener?
+    
     var backgroundQueueUdpListener   = DispatchQueue(label: "udp-lis.bg.queue", attributes: [])
     var backgroundQueueUdpConnection = DispatchQueue(label: "udp-con.bg.queue", attributes: [])
-    var name: String
-    weak var delegate: PeerConnectionDelegate?
     
+    weak var delegate: PeerConnectionDelegate?
+
+    var udpListener:NWListener?
+    var name: String
+        
     init(name:String, delegate: PeerConnectionDelegate) {
         self.delegate = delegate
         self.name = name
@@ -30,8 +33,9 @@ class PeerListener {
                 print("Already listening. Not starting again")
                 return
             }
-            
-            self.udpListener = try NWListener(using: .udp, on: 55555)
+
+            let udpListener = try NWListener(using: .udp, on: 55555)
+            self.udpListener = udpListener
             self.udpListener?.stateUpdateHandler = { (listenerState) in
                 print(" NWListener Handler called")
                 switch listenerState {
@@ -44,6 +48,7 @@ class PeerListener {
                 case .failed(let error):
                     print("Listener: Failed \(error)")
                     self.udpListener!.cancel()
+                    self.startListening()
                 case .cancelled:
                     print("Listener:    Cancelled by myOffButton")
                 default:
@@ -68,14 +73,12 @@ class PeerListener {
                             print("Connection:  waiting: \(error)")
                         case .ready:
                             print("Connection:  ready")
-                            if sharedConnection == nil {
                                 // Accept a new connection.
+                            if sharedConnection == nil {
                                 sharedConnection = PeerConnection(connection: incomingUdpConnection, delegate: delegate)
-//                                self.processData(incomingUdpConnection)
                                 #if DEBUG
                                 print("new connection accepted", incomingUdpConnection)
                                 #endif
-                                
                             } else {
                                 // If a video is already in progress, reject it.
                                 incomingUdpConnection.cancel()
@@ -97,34 +100,13 @@ class PeerListener {
             abort()
         }
     }
-    //    @IBAction func myOffButton(_ sender: Any) {
-    //        udpListener?.cancel()
-    //    }
-    
-//    func processData(_ incomingUdpConnection :NWConnection) {
-//
-//        incomingUdpConnection.receiveMessage(completion: {(data, context, isComplete, error) in
-//
-//            if let data = data, !data.isEmpty {
-//                if let string = String(data: data, encoding: .ascii) {
-//                    print ("DATA       = \(string)")
-//                }
-//            }
-//            //print ("context    = \(context)")
-//            print ("isComplete = \(isComplete)")
-//            //print ("error      = \(error)")
-//
-//            self.processData(incomingUdpConnection)
-//        })
-//
-//    }
     
     // If the user changes their name, update the advertised name.
         func resetName(_ name: String) {
             self.name = name
-            if let listener = udpListener {
+            if let udpListener = udpListener {
                 // Reset the service to advertise.
-                listener.service = NWListener.Service(name: self.name, type: "_videoStream._udp")
+                udpListener.service = NWListener.Service(name: self.name, type: "_videoStream._udp")
             }
         }
 }
