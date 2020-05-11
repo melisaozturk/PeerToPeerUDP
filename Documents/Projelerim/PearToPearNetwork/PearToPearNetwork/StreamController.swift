@@ -237,31 +237,6 @@ extension StreamController {
             }
         }
     }
-    func captureOutput(_ captureOutput: AVCaptureOutput, didOutput
-        sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        
-        if !self.isRecordingSessionStarted {
-            let presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-            self.assetWriter?.startSession(atSourceTime: presentationTime)
-            self.isRecordingSessionStarted = true
-        }
-        
-        let description = CMSampleBufferGetFormatDescription(sampleBuffer)!
-        
-        if CMFormatDescriptionGetMediaType(description) == kCMMediaType_Audio {
-            if self.audioInput!.isReadyForMoreMediaData {
-                //print("appendSampleBuffer audio");
-                self.audioInput?.append(sampleBuffer)
-            }
-        } else {
-            if self.videoInput!.isReadyForMoreMediaData {
-                //print("appendSampleBuffer video");
-                if !self.videoInput!.append(sampleBuffer) {
-                    print("Error writing video buffer")
-                }
-            }
-        }
-    }
     
     func switchCameras() throws {
         //5
@@ -321,4 +296,33 @@ extension StreamController {
 
 extension StreamController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
     
+    func captureOutput(_ captureOutput: AVCaptureOutput, didOutput
+        sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        
+        if !self.isRecordingSessionStarted {
+            let presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+            self.assetWriter?.startSession(atSourceTime: presentationTime)
+            self.isRecordingSessionStarted = true
+        }
+        
+        let description = CMSampleBufferGetFormatDescription(sampleBuffer)!
+        
+        if CMFormatDescriptionGetMediaType(description) == kCMMediaType_Audio {
+            if self.audioInput!.isReadyForMoreMediaData {
+                #if DEBUG
+//                print("appendSampleBuffer audio")
+                #endif
+                self.audioInput?.append(sampleBuffer)
+            }
+        } else {
+            if self.videoInput!.isReadyForMoreMediaData {
+                #if DEBUG
+//                print("appendSampleBuffer video")
+                #endif
+                if !self.videoInput!.append(sampleBuffer) {
+                    print("Error writing video buffer")
+                }
+            }
+        }
+    }
 }

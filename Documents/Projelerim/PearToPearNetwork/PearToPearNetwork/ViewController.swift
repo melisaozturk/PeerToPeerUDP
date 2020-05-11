@@ -24,7 +24,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var lblStatus: UILabel!
     
     let streamController = StreamController()
-    var viewController: ViewController?
 
     var results: [NWBrowser.Result] = [NWBrowser.Result]()
     var name: String = "Default"
@@ -66,8 +65,21 @@ class ViewController: UIViewController {
         lblStatus.text = "NOT RECORDING.. SESSION IS OVER.. RESTART THE APP"
         btnStop.isEnabled = false
         
+        results.removeAll()
+               guard let name = self.sessionName,
+                   !name.isEmpty else {
+                       return
+               }
+               
+               self.name = ""
+               if let listener = sharedListener {
+                   // If your app is already listening, just update the name.
+                   listener.resetName(name)
+               }
+        sections = [.host, .join]
+        tableView.reloadData()
         if let sharedConnection = sharedConnection {
-            sharedConnection.cancel()            
+            sharedConnection.cancel()
         }
         sharedConnection = nil
     }
@@ -139,7 +151,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 if !sessionName!.isEmpty {
                     hostAVideoCall()
                     startHosting()
-//                    ???: video kaydı sonlandırılınca path alabiliyoruz. o yüzden burada görüntü gönderemiyoruz ???? path gidiyor
+//                    ????
                     if  streamController.recordingURL != nil {
                         sharedConnection?.sendUDP(streamController.recordingURL!.absoluteString)
                     }
