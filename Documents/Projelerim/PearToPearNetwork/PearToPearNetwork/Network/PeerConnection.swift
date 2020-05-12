@@ -21,12 +21,13 @@ class PeerConnection {
     var connection: NWConnection?
     let initiatedConnection: Bool
     weak var delegate: PeerConnectionDelegate?
+    var codecDelegate: VideoToolboxH264EncoderDelegate?
     var hostUDP: NWEndpoint.Host = "192.168.4.1"
     var portUDP: NWEndpoint.Port = 5555
     
     // Create an outbound connection when the user initiates a video.
     init(endpoint: NWEndpoint, interface: NWInterface?, delegate: PeerConnectionDelegate) {
-        self.delegate = delegate
+        self.delegate = delegate        
         self.initiatedConnection = true
         
 //        let connection = NWConnection(to: endpoint, using: .udp)

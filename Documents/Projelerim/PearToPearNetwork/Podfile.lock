@@ -1,0 +1,20 @@
+PODS:
+  - CocoaAsyncSocket (7.6.3)
+  - DJIWidget (1.6.2)
+
+DEPENDENCIES:
+  - CocoaAsyncSocket
+  - DJIWidget (~> 1.6.1)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - CocoaAsyncSocket
+    - DJIWidget
+
+SPEC CHECKSUMS:
+  CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
+  DJIWidget: cc635356515eaac7e9698eb9b1b8c5764728e3c5
+
+PODFILE CHECKSUM: 5ec1dad3fe726bec2e1d42c04ae3a5d991ac4440
+
+COCOAPODS: 1.7.5

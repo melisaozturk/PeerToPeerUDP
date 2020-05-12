@@ -1,0 +1,4 @@
+${PODS_ROOT}/Target Support Files/Pods-PearToPearNetwork/Pods-PearToPearNetwork-frameworks.sh
+${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework
+${PODS_ROOT}/DJIWidget/FFmpeg/FFmpeg.framework
+${BUILT_PRODUCTS_DIR}/DJIWidget/DJIWidget.framework

@@ -222,6 +222,7 @@ extension StreamController {
         
         self.videoOutput.setSampleBufferDelegate(self, queue: self.recordingQueue)
         self.audioOutput.setSampleBufferDelegate(self, queue: self.recordingQueue)
+
         displayPreview(on: view)
     }
     
@@ -309,6 +310,7 @@ extension StreamController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCapt
         
         if CMFormatDescriptionGetMediaType(description) == kCMMediaType_Audio {
             if self.audioInput!.isReadyForMoreMediaData {
+                //        videoOutput ve audioOutput gönderilecek. view controller'a url değil  videoOutput ve audioOutput gönderilmeli. Bu işlemler encode ve decode ile yapılmalı.
                 #if DEBUG
 //                print("appendSampleBuffer audio")
                 #endif

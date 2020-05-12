@@ -9,6 +9,7 @@
 import UIKit
 import Network
 import AVKit
+import CocoaAsyncSocket
 
 class ViewController: UIViewController {
     
@@ -273,6 +274,31 @@ extension ViewController {
         
         sections = [.host, .join]
         tableView.reloadData()
+    }
+}
+
+
+extension ViewController: VideoToolboxH264EncoderDelegate {
+
+    func handle(spsppsData: Data) {
+        sendData(data: spsppsData as NSData)
+    }
+    
+    func encode(data: Data, isKeyFrame: Bool) {
+        sendData(data: data as NSData)
+    }
+    
+    func sendData(data: NSData) {
+//        var serverSocket: GCDAsyncUdpSocket!
+//        serverSocket = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+
+        //print("sendData", serverSocket, clientAddress)
+//        let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.length))
+        
+//        if let serverSocket = serverSocket, let address = serverSocket {
+//            print("video sending: ", serverSocket, " - ", address)
+//            VideoBufferTransporter.shared.sendVideoBuffer(videoBuffer, length: data.length, socket: serverSocket, address: address)
+//        }
     }
 }
 

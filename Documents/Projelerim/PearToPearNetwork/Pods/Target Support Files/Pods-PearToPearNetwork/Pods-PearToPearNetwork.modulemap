@@ -1,0 +1,6 @@
+framework module Pods_PearToPearNetwork {
+  umbrella header "Pods-PearToPearNetwork-umbrella.h"
+
+  export *
+  module * { export * }
+}
