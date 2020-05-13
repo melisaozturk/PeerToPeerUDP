@@ -69,21 +69,21 @@ class VideoToolboxH264Encoder: NSObject {
 
             
 
-            // ---- 1. 创建 VTCompressionSession ----
+            // ---- 1.VTCompressionSession ----
 
             VTCompressionSessionCreate(allocator: kCFAllocatorDefault,
 
-                                       width: Int32(width), // 输出的宽度
+                                       width: Int32(width), //
 
-                height: Int32(height), // 输出的高度
+                height: Int32(height), //
 
-                codecType: kCMVideoCodecType_H264, // 编码类型为H.264
+                codecType: kCMVideoCodecType_H264, // .264
 
                 encoderSpecification: nil, // encoderSpecification
 
                 imageBufferAttributes: nil, // sourceImageBufferAttributes
 
-                compressedDataAllocator: nil, // compressedDataAllocator, nil 为 默认
+                compressedDataAllocator: nil, // compressedDataAllocator, nil
 
                 outputCallback: compressionOutputCallback,
 
@@ -97,29 +97,29 @@ class VideoToolboxH264Encoder: NSObject {
 
             
 
-            // --- 2. 配置压缩参数 VTSessionSetProperty ----
+            // --- 2. VTSessionSetProperty ----
 
             VTSessionSetProperty(compressionSession, key: kVTCompressionPropertyKey_ProfileLevel, value: kVTProfileLevel_H264_Main_AutoLevel)
 
-            // 从相机读取，所以是实时
+            //
 
             VTSessionSetProperty(compressionSession, key: kVTCompressionPropertyKey_RealTime, value: true as CFTypeRef)
 
-            // 关键帧间隔(控制最后生成的 H.264 文件中关键帧的出现频率)
+            //
 
             VTSessionSetProperty(compressionSession, key: kVTCompressionPropertyKey_MaxKeyFrameInterval, value: 10 as CFTypeRef)
 
-            // 比特率
+            //
 
             VTSessionSetProperty(compressionSession, key: kVTCompressionPropertyKey_AverageBitRate, value: width * height * 2 * 32 as CFTypeRef)
 
-            // 码率
+            //
 
             VTSessionSetProperty(compressionSession, key: kVTCompressionPropertyKey_DataRateLimits, value: [width * height * 2 * 4, 1] as CFArray)
 
             
 
-            // ---- 3. 准备编码 ----
+            // ---- 3. ----
 
             VTCompressionSessionPrepareToEncodeFrames(compressionSession)
 
@@ -139,7 +139,7 @@ class VideoToolboxH264Encoder: NSObject {
 
                 let duration = CMSampleBufferGetOutputDuration(sampleBuffer)
 
-                // ---- 4. 拿到 CVPixelBuffer 进行编码 ----
+                // ---- 4.  CVPixelBuffer  ----
 
                 VTCompressionSessionEncodeFrame(compressionSession, imageBuffer: pixelbuffer, presentationTimeStamp: presentationTimestamp, duration: duration, frameProperties: nil, sourceFrameRefcon: nil, infoFlagsOut: nil)
 
@@ -294,10 +294,7 @@ class VideoToolboxH264Encoder: NSObject {
 
                         // save sps/pps to file
 
-                        // NOTE: 事实上，大多数情况下 sps/pps 不变/变化不大 或者 变化对视频数据产生的影响很小，
-
-                        // 因此，多数情况下你都可以只在文件头写入或视频流开头传输 sps/pps 数据
-
+                        // NOTE: 
                         vtbH264Encoder.handle(sps: spsData, pps: ppsData)
 
                     }

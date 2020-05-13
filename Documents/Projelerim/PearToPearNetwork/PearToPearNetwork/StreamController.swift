@@ -311,7 +311,6 @@ extension StreamController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCapt
         
         if CMFormatDescriptionGetMediaType(description) == kCMMediaType_Audio {
             if self.audioInput!.isReadyForMoreMediaData {
-                //        videoOutput ve audioOutput gönderilecek. view controller'a url değil  videoOutput ve audioOutput gönderilmeli. Bu işlemler encode ve decode ile yapılmalı.
                 #if DEBUG
 //                print("appendSampleBuffer audio")
                 #endif

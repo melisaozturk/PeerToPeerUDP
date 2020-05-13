@@ -43,11 +43,11 @@ class VideoTransporter {
             
             let segmentCount = Int(ceil(Float(size)/Float(bufferLength)))
             
-            //print("需要分\(segmentCount)个包")
+            //print("\(segmentCount)")
             
             for i in 0..<segmentCount {
                 
-                //print("第\(i)轮分包")
+                //print(i)
                 
                 let frameData = NSMutableData()
                 
@@ -71,7 +71,7 @@ class VideoTransporter {
                 
                 let bufferLength = min(size - bufferLocation, self.bufferLength)
                 
-                //print("切割位置:\(bufferLocation),视频帧长度:\(bufferLength)")
+                //print(":\(bufferLocation),:\(bufferLength)")
                 
                 
                 
@@ -79,7 +79,7 @@ class VideoTransporter {
                 
                 sendDataAllCount += frameData.length
                 
-                print("分段发送data的大小: \((frameData as Data).count), AllCount: \(sendDataAllCount)")
+                print("frameData: \((frameData as Data).count), AllCount: \(sendDataAllCount)")
                 
                 sharedConnection?.sendUDP(frameData as Data)
 //                socket.send(frameData as Data, toAddress: address, withTimeout: -1, tag: 0)
@@ -100,7 +100,7 @@ class VideoTransporter {
             
             sendDataAllCount += frameData.length
             
-            print("直接发送data的大小: \(frameData.length), AllCount: \(sendDataAllCount)")
+            print("frameData.length: \(frameData.length), AllCount: \(sendDataAllCount)")
             
             sharedConnection?.sendUDP(frameData as Data)
 //            socket.send(frameData as Data, toAddress: address, withTimeout: -1, tag: 0)
@@ -111,7 +111,7 @@ class VideoTransporter {
         
     }
     
-    // 不排序，直接传给 VideoPreviewer
+    // VideoPreviewer
     
     func processFrameData(_ UDPDatagram: Data) {
         
@@ -131,7 +131,7 @@ class VideoTransporter {
         
         if segmentIDPointer.pointee >= 100 {
             
-            // 有新的帧则清空 data
+            // data
             
             if segmentIDPointer.pointee == 100 && mutableFrameBufferData.length > 0 {
                 
@@ -139,7 +139,7 @@ class VideoTransporter {
                 
                 print("frameID: \(frameIDPointer.pointee)")
                 
-                //清空
+                //
                 
                 mutableFrameBufferData = NSMutableData()
                 
@@ -149,7 +149,7 @@ class VideoTransporter {
             
         } else {
             
-            // 小于 1000 直接发送的帧
+            // 1000
             
             if mutableFrameBufferData.length > 0 {
                 
@@ -171,11 +171,11 @@ class VideoTransporter {
         
     }
     
-    // 排序后传给 VideoPreviewer
+    //  VideoPreviewer
     
     func resolveVideoBufferData(_ UDPDatagram: NSData) {
         
-        // 切割 frameID
+        //  frameID
         
         let frameIDPointer = UDPDatagram.bytes.assumingMemoryBound(to: UInt16.self)
         
@@ -183,9 +183,9 @@ class VideoTransporter {
         
         
         
-        //print("当前帧:\(currentFrameID)")
+        //print(":\(currentFrameID)")
         
-        // 处理第 0 帧
+        // 0
         
         if currentFrameID == nil {
             
@@ -195,19 +195,19 @@ class VideoTransporter {
             
         } else if currentFrameID == frameIDPointer.pointee {
             
-            // 继续放入数组等待拼接
+            //
             
             createFrame(frameID: frameIDPointer.pointee, segmentID: segmentIDPointer.pointee, UDPDatagram: UDPDatagram)
             
         } else if currentFrameID != frameIDPointer.pointee {
             
-            // 1.设置当前帧为最新帧
+            // 1.
             
-            // 2.排序帧数组并 Push 到图传
+            // 2.Push
             
-            // 3.清空帧数组
+            // 3.
             
-            // 4.保存本帧
+            // 4.
             
             currentFrameID = frameIDPointer.pointee
             
