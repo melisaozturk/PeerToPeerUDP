@@ -20,14 +20,14 @@ protocol PeerConnectionDelegate: class {
 class PeerConnection {
     var connection: NWConnection?
     let initiatedConnection: Bool
-    weak var delegate: PeerConnectionDelegate?
-    var codecDelegate: VideoToolboxH264EncoderDelegate?
+    weak var delegate: PeerConnectionDelegate?    
     var hostUDP: NWEndpoint.Host = "192.168.4.1"
     var portUDP: NWEndpoint.Port = 5555
+    var encoderDelegate: VideoToolboxH264EncoderDelegate?
     
     // Create an outbound connection when the user initiates a video.
     init(endpoint: NWEndpoint, interface: NWInterface?, delegate: PeerConnectionDelegate) {
-        self.delegate = delegate        
+        self.delegate = delegate
         self.initiatedConnection = true
         
 //        let connection = NWConnection(to: endpoint, using: .udp)
@@ -42,7 +42,7 @@ class PeerConnection {
         self.delegate = delegate
         self.connection = connection
         self.initiatedConnection = false
-        
+        self.encoderDelegate = self
         startConnection()
     }
     
@@ -102,18 +102,10 @@ class PeerConnection {
         }
     }
     // Handle sending a "string message".
-    func sendUDP(_ content: String) {
-        guard let connection = connection else {
-            return
-        }
+    func sendUDP(_ content: Data) {
+        encoderDelegate?.encode(data: content, isKeyFrame: true)
+        //         Send the application content along with the message.
         
-        // Create a message object to hold the command type.
-        let message = NWProtocolFramer.Message(videoMessageType: .url)
-        let context = NWConnection.ContentContext(identifier: "Move",
-                                                  metadata: [message])
-        
-        // Send the application content along with the message.
-        connection.send(content: content.data(using: .unicode), contentContext: context, isComplete: true, completion: .idempotent)
         
     }
     
@@ -149,4 +141,45 @@ class PeerConnection {
             }
         }
     }
+    
+    func createFrame() {
+        
+    }
+}
+
+
+// MARK: VideoToolboxH264EncoderDelegate
+
+extension PeerConnection: VideoToolboxH264EncoderDelegate {
+    
+    func handle(spsppsData: Data) {
+        
+        sendData(data: spsppsData as NSData)
+        
+    }
+    
+    func encode(data: Data, isKeyFrame: Bool) {
+        
+        sendData(data: data as NSData)
+        
+    }
+    
+    func sendData(data: NSData) {
+        
+        guard let connection = connection else {
+            return
+        }
+        
+//        let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.length))
+        
+        //         Create a message object to hold the command type.
+        let message = NWProtocolFramer.Message(videoMessageType: .url)
+        let context = NWConnection.ContentContext(identifier: "Move",
+                                                  metadata: [message])
+        connection.send(content: data, contentContext: context, isComplete: true, completion: .idempotent)
+        
+        //        VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.length, address: "address")
+        
+    }
+    
 }

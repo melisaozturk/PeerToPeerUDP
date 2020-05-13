@@ -55,6 +55,8 @@ class StreamController: NSObject {
     
     var frontCamera: AVCaptureDevice? //to represent the actual iOS device’s cameras
     var rearCamera: AVCaptureDevice?
+    
+    var encoder = VideoToolboxH264Encoder()
 }
 
 
@@ -221,8 +223,7 @@ extension StreamController {
         }
         
         self.videoOutput.setSampleBufferDelegate(self, queue: self.recordingQueue)
-        self.audioOutput.setSampleBufferDelegate(self, queue: self.recordingQueue)
-
+        self.audioOutput.setSampleBufferDelegate(self, queue: self.recordingQueue)       
         displayPreview(on: view)
     }
     
@@ -315,6 +316,7 @@ extension StreamController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCapt
 //                print("appendSampleBuffer audio")
                 #endif
                 self.audioInput?.append(sampleBuffer)
+                self.encoder.encodeWithSampleBuffer(sampleBuffer)
             }
         } else {
             if self.videoInput!.isReadyForMoreMediaData {

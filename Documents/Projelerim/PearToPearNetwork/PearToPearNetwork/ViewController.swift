@@ -9,7 +9,6 @@
 import UIKit
 import Network
 import AVKit
-import CocoaAsyncSocket
 
 class ViewController: UIViewController {
     
@@ -30,7 +29,7 @@ class ViewController: UIViewController {
     var name: String = "Default"
     var sessionName: String?
     var sections: [VideoFinderSection] = [.host, .join]
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
        
@@ -139,7 +138,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         }
         return UITableViewCell()
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         let currentSection = sections[indexPath.section]
@@ -148,14 +147,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             if indexPath.row == 0 {
                 let cell = tableView.cellForRow(at: indexPath) as! HostTableViewCell
                 self.sessionName = cell.txtSessionName.text
-//               Share your video - URL göndereceğiz
+//               Share your video
                 if !sessionName!.isEmpty {
                     hostAVideoCall()
                     startHosting()
-//                    ????
-                    if  streamController.recordingURL != nil {
-                        sharedConnection?.sendUDP(streamController.recordingURL!.absoluteString)
-                    }
+
+                    sharedConnection?.sendUDP(streamController.encoder.compressionSession! as! Data)
                 }
             }
         case .join:
@@ -278,27 +275,4 @@ extension ViewController {
 }
 
 
-extension ViewController: VideoToolboxH264EncoderDelegate {
-
-    func handle(spsppsData: Data) {
-        sendData(data: spsppsData as NSData)
-    }
-    
-    func encode(data: Data, isKeyFrame: Bool) {
-        sendData(data: data as NSData)
-    }
-    
-    func sendData(data: NSData) {
-//        var serverSocket: GCDAsyncUdpSocket!
-//        serverSocket = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-
-        //print("sendData", serverSocket, clientAddress)
-//        let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.length))
-        
-//        if let serverSocket = serverSocket, let address = serverSocket {
-//            print("video sending: ", serverSocket, " - ", address)
-//            VideoBufferTransporter.shared.sendVideoBuffer(videoBuffer, length: data.length, socket: serverSocket, address: address)
-//        }
-    }
-}
 
