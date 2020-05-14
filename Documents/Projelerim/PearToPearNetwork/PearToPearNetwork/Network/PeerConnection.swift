@@ -23,8 +23,7 @@ class PeerConnection {
     weak var delegate: PeerConnectionDelegate?    
     var hostUDP: NWEndpoint.Host = "192.168.4.1"
     var portUDP: NWEndpoint.Port = 5555
-//    var encoderDelegate: VideoToolboxH264EncoderDelegate?
-    var encoder: VideoToolboxH264Encoder?
+    var encoder: VideoEncoder?
     
     // Create an outbound connection when the user initiates a video.
     init(endpoint: NWEndpoint, interface: NWInterface?, delegate: PeerConnectionDelegate) {
@@ -150,9 +149,9 @@ class PeerConnection {
 }
 
 
-// MARK: VideoToolboxH264EncoderDelegate
+// MARK: VideoEncoderDelegate
 
-extension PeerConnection: VideoToolboxH264EncoderDelegate {
+extension PeerConnection: VideoEncoderDelegate {
 
     func handle(spsppsData: Data) {
 

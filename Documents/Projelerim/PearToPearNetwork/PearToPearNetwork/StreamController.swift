@@ -56,7 +56,7 @@ class StreamController: NSObject {
     var frontCamera: AVCaptureDevice? //to represent the actual iOS device’s cameras
     var rearCamera: AVCaptureDevice?
     
-    var encoder = VideoToolboxH264Encoder()
+    var encoder = VideoEncoder()
 }
 
 

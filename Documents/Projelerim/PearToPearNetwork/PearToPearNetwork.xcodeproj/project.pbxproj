@@ -24,7 +24,7 @@
 		1EE444E2246323ED00B3D18B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1EE444E0246323ED00B3D18B /* LaunchScreen.storyboard */; };
 		1EE444ED246323EE00B3D18B /* PearToPearNetworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE444EC246323EE00B3D18B /* PearToPearNetworkTests.swift */; };
 		1EE444F8246323EE00B3D18B /* PearToPearNetworkUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE444F7246323EE00B3D18B /* PearToPearNetworkUITests.swift */; };
-		1EFBF734246C626200CB2053 /* VideoToolboxH264Encoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFBF733246C626200CB2053 /* VideoToolboxH264Encoder.swift */; };
+		1EFBF734246C626200CB2053 /* VideoEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFBF733246C626200CB2053 /* VideoEncoder.swift */; };
 		1EFBF736246C732500CB2053 /* VideoTransporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFBF735246C732500CB2053 /* VideoTransporter.swift */; };
 /* End PBXBuildFile section */
 
@@ -69,7 +69,7 @@
 		1EE444F3246323EE00B3D18B /* PearToPearNetworkUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PearToPearNetworkUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EE444F7246323EE00B3D18B /* PearToPearNetworkUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PearToPearNetworkUITests.swift; sourceTree = "<group>"; };
 		1EE444F9246323EE00B3D18B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1EFBF733246C626200CB2053 /* VideoToolboxH264Encoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoToolboxH264Encoder.swift; sourceTree = "<group>"; };
+		1EFBF733246C626200CB2053 /* VideoEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEncoder.swift; sourceTree = "<group>"; };
 		1EFBF735246C732500CB2053 /* VideoTransporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTransporter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -179,7 +179,7 @@
 		1EFBF737246C866C00CB2053 /* Codec */ = {
 			isa = PBXGroup;
 			children = (
-				1EFBF733246C626200CB2053 /* VideoToolboxH264Encoder.swift */,
+				1EFBF733246C626200CB2053 /* VideoEncoder.swift */,
 				1EFBF735246C732500CB2053 /* VideoTransporter.swift */,
 			);
 			path = Codec;
@@ -328,7 +328,7 @@
 				1EE444D8246323EB00B3D18B /* SceneDelegate.swift in Sources */,
 				1EFBF736246C732500CB2053 /* VideoTransporter.swift in Sources */,
 				1ECF520124647C6E00330B7A /* VideoProtocol.swift in Sources */,
-				1EFBF734246C626200CB2053 /* VideoToolboxH264Encoder.swift in Sources */,
+				1EFBF734246C626200CB2053 /* VideoEncoder.swift in Sources */,
 				1ECF520A2464A39C00330B7A /* HostTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

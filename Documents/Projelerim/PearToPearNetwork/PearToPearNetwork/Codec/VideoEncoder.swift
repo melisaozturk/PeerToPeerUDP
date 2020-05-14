@@ -1,5 +1,5 @@
 //
-//  VideoToolboxH264Encoder.swift
+// VideoEncoder.swift
 //  PearToPearNetwork
 //
 //  Created by melisa öztürk on 13.05.2020.
@@ -9,7 +9,7 @@
 import Foundation
 import VideoToolbox
 
-@objc protocol VideoToolboxH264EncoderDelegate {
+@objc protocol VideoEncoderDelegate {
 
     func handle(spsppsData: Data)
 
@@ -17,11 +17,11 @@ import VideoToolbox
 
 }
 
-class VideoToolboxH264Encoder: NSObject {
+class VideoEncoder: NSObject {
 
     var compressionSession: VTCompressionSession?
 
-    weak var delegate: VideoToolboxH264EncoderDelegate?
+    weak var delegate: VideoEncoderDelegate?
 
     private let compressionQueue = DispatchQueue(label: "videotoolbox.compression.queue")
 
@@ -206,7 +206,7 @@ class VideoToolboxH264Encoder: NSObject {
         }
 
 
-        let vtbH264Encoder: VideoToolboxH264Encoder = Unmanaged.fromOpaque(outputCallbackRefCon!).takeUnretainedValue()
+        let vtbH264Encoder: VideoEncoder = Unmanaged.fromOpaque(outputCallbackRefCon!).takeUnretainedValue()
 
         
 
