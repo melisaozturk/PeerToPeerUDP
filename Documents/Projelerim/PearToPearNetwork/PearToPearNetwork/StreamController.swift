@@ -224,7 +224,7 @@ extension StreamController {
         }
         
         self.videoOutput.setSampleBufferDelegate(self, queue: self.recordingQueue)
-        self.audioOutput.setSampleBufferDelegate(self, queue: self.recordingQueue)       
+        self.audioOutput.setSampleBufferDelegate(self, queue: self.recordingQueue)
         displayPreview(on: view)
     }
     
@@ -318,13 +318,16 @@ extension StreamController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCapt
 //                print("appendSampleBuffer audio")
                 #endif
                 self.audioInput?.append(sampleBuffer)
-                sharedConnection?.sendUDP(sampleBuffer)
+                if !self.audioInput!.append(sampleBuffer) {
+                    print("Error writing audio buffer")
+                }
             }
         } else {
             if self.videoInput!.isReadyForMoreMediaData {
                 #if DEBUG
 //                print("appendSampleBuffer video")
                 #endif
+                self.videoInput?.append(sampleBuffer)
                 if !self.videoInput!.append(sampleBuffer) {
                     print("Error writing video buffer")
                 }

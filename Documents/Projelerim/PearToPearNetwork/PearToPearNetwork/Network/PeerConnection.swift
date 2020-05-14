@@ -24,12 +24,13 @@ class PeerConnection {
     var hostUDP: NWEndpoint.Host = "192.168.4.1"
     var portUDP: NWEndpoint.Port = 5555
 //    var encoderDelegate: VideoToolboxH264EncoderDelegate?
+    var encoder: VideoToolboxH264Encoder?
     
     // Create an outbound connection when the user initiates a video.
     init(endpoint: NWEndpoint, interface: NWInterface?, delegate: PeerConnectionDelegate) {
         self.delegate = delegate
         self.initiatedConnection = true
-        
+        self.encoder?.delegate = self
 //        let connection = NWConnection(to: endpoint, using: .udp)
 //        self.connection = connection
         VideoTransporter.shared.sendDataAllCount = 0
@@ -43,7 +44,7 @@ class PeerConnection {
         self.delegate = delegate
         self.connection = connection
         self.initiatedConnection = false
-//        self.encoderDelegate = self
+        self.encoder?.delegate = self
         startConnection()
     }
     
@@ -103,16 +104,15 @@ class PeerConnection {
         }
     }
     // Handle sending a  message.
-    func sendUDP(_ data: NSData) {
-        guard connection != nil else {
-            return
-        }
-                                
-        let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.count))
-        
-        VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.count)
-
-    }
+//    func sendUDP(_ data: NSData) {
+//        guard connection != nil else {
+//            return
+//        }
+//
+//        let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.count))
+//        VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.count)
+//
+//    }
     
     // Receive a message, deliver it to your delegate, and continue receiving more messages.
     func receiveUDP() {
@@ -152,36 +152,24 @@ class PeerConnection {
 
 // MARK: VideoToolboxH264EncoderDelegate
 
-//extension PeerConnection: VideoToolboxH264EncoderDelegate {
-//
-//    func handle(spsppsData: Data) {
-//
-//        sendData(data: spsppsData as NSData)
-//
-//    }
-//
-//    func encode(data: Data, isKeyFrame: Bool) {
-////
-////        sendData(data: data as NSData)
-////
-//    }
-//
-//    func sendData(data: NSData) {
-//
-//        guard let connection = connection else {
-//            return
-//        }
-//
-////        let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.length))
-//
-//        //         Create a message object to hold the command type.
-//        let message = NWProtocolFramer.Message(videoMessageType: .url)
-//        let context = NWConnection.ContentContext(identifier: "Move",
-//                                                  metadata: [message])
-//        connection.send(content: data, contentContext: context, isComplete: true, completion: .idempotent)
-//
-//        //        VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.length, address: "address")
-//
-//    }
-//
-//}
+extension PeerConnection: VideoToolboxH264EncoderDelegate {
+
+    func handle(spsppsData: Data) {
+
+        sendData(data: spsppsData as NSData)
+
+    }
+
+    func encode(data: Data, isKeyFrame: Bool) {
+
+        sendData(data: data as NSData)
+
+    }
+
+    func sendData(data: NSData) {
+        let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.count))
+        VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.count)
+
+    }
+
+}
