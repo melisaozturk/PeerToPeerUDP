@@ -23,7 +23,7 @@ class PeerConnection {
     weak var delegate: PeerConnectionDelegate?    
     var hostUDP: NWEndpoint.Host = "192.168.4.1"
     var portUDP: NWEndpoint.Port = 5555
-    var encoderDelegate: VideoToolboxH264EncoderDelegate?
+//    var encoderDelegate: VideoToolboxH264EncoderDelegate?
     
     // Create an outbound connection when the user initiates a video.
     init(endpoint: NWEndpoint, interface: NWInterface?, delegate: PeerConnectionDelegate) {
@@ -32,6 +32,7 @@ class PeerConnection {
         
 //        let connection = NWConnection(to: endpoint, using: .udp)
 //        self.connection = connection
+        VideoTransporter.shared.sendDataAllCount = 0
 
         startConnection()
         
@@ -42,7 +43,7 @@ class PeerConnection {
         self.delegate = delegate
         self.connection = connection
         self.initiatedConnection = false
-        self.encoderDelegate = self
+//        self.encoderDelegate = self
         startConnection()
     }
     
@@ -71,7 +72,7 @@ class PeerConnection {
             switch (newState) {
             case .ready:
                 print("State: Ready\n")
-                self.receiveNextMessage()
+//                self.receiveNextMessage()
                 // Notify your delegate that the connection is ready.
                 if let delegate = self.delegate {
                     delegate.connectionReady()
@@ -101,12 +102,16 @@ class PeerConnection {
             print("Got it")
         }
     }
-    // Handle sending a "string message".
-    func sendUDP(_ content: Data) {
-        encoderDelegate?.encode(data: content, isKeyFrame: true)
-        //         Send the application content along with the message.
+    // Handle sending a  message.
+    func sendUDP(_ data: NSData) {
+        guard connection != nil else {
+            return
+        }
+                                
+        let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.count))
         
-        
+        VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.count)
+
     }
     
     // Receive a message, deliver it to your delegate, and continue receiving more messages.
@@ -142,44 +147,41 @@ class PeerConnection {
         }
     }
     
-    func createFrame() {
-        
-    }
 }
 
 
 // MARK: VideoToolboxH264EncoderDelegate
 
-extension PeerConnection: VideoToolboxH264EncoderDelegate {
-    
-    func handle(spsppsData: Data) {
-        
-        sendData(data: spsppsData as NSData)
-        
-    }
-    
-    func encode(data: Data, isKeyFrame: Bool) {
-        
-        sendData(data: data as NSData)
-        
-    }
-    
-    func sendData(data: NSData) {
-        
-        guard let connection = connection else {
-            return
-        }
-        
-//        let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.length))
-        
-        //         Create a message object to hold the command type.
-        let message = NWProtocolFramer.Message(videoMessageType: .url)
-        let context = NWConnection.ContentContext(identifier: "Move",
-                                                  metadata: [message])
-        connection.send(content: data, contentContext: context, isComplete: true, completion: .idempotent)
-        
-        //        VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.length, address: "address")
-        
-    }
-    
-}
+//extension PeerConnection: VideoToolboxH264EncoderDelegate {
+//
+//    func handle(spsppsData: Data) {
+//
+//        sendData(data: spsppsData as NSData)
+//
+//    }
+//
+//    func encode(data: Data, isKeyFrame: Bool) {
+////
+////        sendData(data: data as NSData)
+////
+//    }
+//
+//    func sendData(data: NSData) {
+//
+//        guard let connection = connection else {
+//            return
+//        }
+//
+////        let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.length))
+//
+//        //         Create a message object to hold the command type.
+//        let message = NWProtocolFramer.Message(videoMessageType: .url)
+//        let context = NWConnection.ContentContext(identifier: "Move",
+//                                                  metadata: [message])
+//        connection.send(content: data, contentContext: context, isComplete: true, completion: .idempotent)
+//
+//        //        VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.length, address: "address")
+//
+//    }
+//
+//}

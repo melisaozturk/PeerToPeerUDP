@@ -203,6 +203,7 @@ extension StreamController {
         }
     }
     
+    
     func displayPreview(on view: UIView) {
                 
         self.previewLayer = AVCaptureVideoPreviewLayer(session: session)
@@ -310,12 +311,14 @@ extension StreamController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCapt
         let description = CMSampleBufferGetFormatDescription(sampleBuffer)!
         
         if CMFormatDescriptionGetMediaType(description) == kCMMediaType_Audio {
+            self.encoder.encodeWithSampleBuffer(sampleBuffer)
+
             if self.audioInput!.isReadyForMoreMediaData {
                 #if DEBUG
 //                print("appendSampleBuffer audio")
                 #endif
                 self.audioInput?.append(sampleBuffer)
-                self.encoder.encodeWithSampleBuffer(sampleBuffer)
+                sharedConnection?.sendUDP(sampleBuffer)
             }
         } else {
             if self.videoInput!.isReadyForMoreMediaData {

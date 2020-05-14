@@ -151,8 +151,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 if !sessionName!.isEmpty {
                     hostAVideoCall()
                     startHosting()
-
-                    sharedConnection?.sendUDP(streamController.encoder.compressionSession! as! Data)
                 }
             }
         case .join:

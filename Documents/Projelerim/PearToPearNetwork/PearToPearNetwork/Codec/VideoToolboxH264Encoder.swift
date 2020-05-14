@@ -15,6 +15,7 @@ import VideoToolbox
 
     func encode(data: Data, isKeyFrame: Bool)
 
+    func sendData(data: NSData)
 }
 
 class VideoToolboxH264Encoder: NSObject {
