@@ -74,9 +74,10 @@ class PeerConnection {
                 print("State: Ready\n")
 //                self.receiveNextMessage()
                 // Notify your delegate that the connection is ready.
-                if let delegate = self.delegate {
-                    delegate.connectionReady()
-                }
+                self.receiveUDP(connection)
+//                if let delegate = self.delegate {
+//                    delegate.connectionReady()
+//                }
             case .setup:
                 print("State: Setup\n")
             case .cancelled:
@@ -113,38 +114,61 @@ class PeerConnection {
 //
 //    }
     
+    
     // Receive a message, deliver it to your delegate, and continue receiving more messages.
-    func receiveUDP() {
+    func receiveUDP(_ connection: NWConnection) {
+        connection.receiveMessage { (data, _, isComplete, error) in
+            if let data = data, !data.isEmpty {
+                print("Did receive, size: \(data.count)")
+            }
+            if let error = error {
+                self.connectionDidFail(error: error)
+                return
+            }
+            self.receiveUDP(connection)
+        }
+    }
+    
+    func connectionDidFail(error: Error) {
+        
         guard let connection = connection else {
             return
         }
         
-        connection.receiveMessage { (content, context, isComplete, error) in
-            // Extract your message type from the received context.
-            if let videoMessage = context?.protocolMetadata(definition: VideoProtocol.definition) as? NWProtocolFramer.Message {
-                self.delegate?.receivedMessage(content: content, message: videoMessage)
-            }
-            if error == nil {
-                // Continue to receive more messages until you receive and error.
-                self.receiveNextMessage()
-            }
+        print("Failed, error: \(error)")
+        if connection.stateUpdateHandler != nil {
+            self.connection!.stateUpdateHandler = nil
+            connection.cancel()
         }
-    }
+//            exit(0)
+        }
+       
+//        connection.receiveMessage { (content, context, isComplete, error) in
+//            // Extract your message type from the received context.
+//            if let videoMessage = context?.protocolMetadata(definition: VideoProtocol.definition) as? NWProtocolFramer.Message {
+//                self.delegate?.receivedMessage(content: content, message: videoMessage)
+//            }
+//            if error == nil {
+//                // Continue to receive more messages until you receive and error.
+//                self.receiveNextMessage()
+//            }
+//        }
+//    }
     
     // Receive a message, deliver it to your delegate, and continue receiving more messages.
-    func receiveNextMessage() {
-        
-        connection!.receiveMessage { (content, context, isComplete, error) in
-            // Extract your message type from the received context.
-            if let videoMessage = context?.protocolMetadata(definition: VideoProtocol.definition) as? NWProtocolFramer.Message {
-                self.delegate?.receivedMessage(content: content, message: videoMessage)
-            }
-            if error == nil {
-                // Continue to receive more messages until you receive and error.
-                self.receiveNextMessage()
-            }
-        }
-    }
+//    func receiveNextMessage() {
+//
+//        connection!.receiveMessage { (content, context, isComplete, error) in
+//            // Extract your message type from the received context.
+//            if let videoMessage = context?.protocolMetadata(definition: VideoProtocol.definition) as? NWProtocolFramer.Message {
+//                self.delegate?.receivedMessage(content: content, message: videoMessage)
+//            }
+//            if error == nil {
+//                // Continue to receive more messages until you receive and error.
+//                self.receiveNextMessage()
+//            }
+//        }
+//    }
     
 }
 

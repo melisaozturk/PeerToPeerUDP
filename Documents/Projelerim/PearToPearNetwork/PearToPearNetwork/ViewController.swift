@@ -161,7 +161,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                     sharedConnection = PeerConnection(endpoint: result.endpoint,
                                                       interface:  result.interfaces.first,
                                                           delegate: self)
-                    sharedConnection!.receiveUDP()
+                sharedConnection!.receiveUDP(sgit haredConnection!.connection!)
                     
                     #if DEBUG
                     print("You have just joined a session ..")
