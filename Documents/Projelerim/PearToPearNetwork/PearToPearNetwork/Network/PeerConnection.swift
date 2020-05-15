@@ -74,7 +74,7 @@ class PeerConnection {
                 print("State: Ready\n")
 //                self.receiveNextMessage()
                 // Notify your delegate that the connection is ready.
-                self.receiveUDP(connection)
+//                self.receiveUDP(connection)
 //                if let delegate = self.delegate {
 //                    delegate.connectionReady()
 //                }
@@ -117,9 +117,14 @@ class PeerConnection {
     
     // Receive a message, deliver it to your delegate, and continue receiving more messages.
     func receiveUDP(_ connection: NWConnection) {
-        connection.receiveMessage { (data, _, isComplete, error) in
+        connection.receiveMessage { (data, context, isComplete, error) in
             if let data = data, !data.isEmpty {
+//                self.delegate?.receivedMessage(content: data, message: videoMessage)
                 print("Did receive, size: \(data.count)")
+            }
+            if let videoMessage = context?.protocolMetadata(definition: VideoProtocol.definition) as? NWProtocolFramer.Message {
+                self.delegate?.receivedMessage(content: data, message: videoMessage)
+                print("Did receive, size: \(data!.count), videoMessage: \(videoMessage)")
             }
             if let error = error {
                 self.connectionDidFail(error: error)

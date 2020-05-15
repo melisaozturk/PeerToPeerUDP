@@ -28,17 +28,17 @@ class StreamController: NSObject {
     }
     
     
-    private var session: AVCaptureSession = AVCaptureSession()
-    private var deviceInput: AVCaptureInput?
+    private var session: AVCaptureSession = AVCaptureSession() // manages capture activity and coordinates the flow of data from input devices to capture outputs.
+    private var deviceInput: AVCaptureInput? // to provide input data to a capture session.
     private var previewLayer: AVCaptureVideoPreviewLayer?
-    private var videoOutput: AVCaptureVideoDataOutput = AVCaptureVideoDataOutput()
+    private var videoOutput: AVCaptureVideoDataOutput = AVCaptureVideoDataOutput() // A capture output that records video and provides access to video frames for processing.
     private var audioOutput: AVCaptureAudioDataOutput = AVCaptureAudioDataOutput()
     
-    private var audioConnection: AVCaptureConnection?
-    private var videoConnection: AVCaptureConnection?
+    private var audioConnection: AVCaptureConnection? // A connection between a specific pair of capture input and capture output objects in a capture session.
+    private var videoConnection: AVCaptureConnection? // to write media data to a new file
     
-    private var assetWriter: AVAssetWriter?
-    private var audioInput: AVAssetWriterInput?
+    private var assetWriter: AVAssetWriter? //to write media data to a new file
+    private var audioInput: AVAssetWriterInput? // to append media samples to an asset writer's output file.
     private var videoInput: AVAssetWriterInput?
     
     private var fileManager: FileManager = FileManager()
@@ -50,7 +50,7 @@ class StreamController: NSObject {
     private var recordingQueue = DispatchQueue(label: "recording.queue")
     
     var currentCameraPosition: CameraPosition?
-    var frontCameraInput: AVCaptureDeviceInput?
+    var frontCameraInput: AVCaptureDeviceInput? // provides media from a capture device
     var rearCameraInput: AVCaptureDeviceInput?
     
     var frontCamera: AVCaptureDevice? //to represent the actual iOS device’s cameras
@@ -58,8 +58,6 @@ class StreamController: NSObject {
     
     var encoder = VideoEncoder()
 }
-
-
 
 extension StreamController {
     
@@ -138,14 +136,16 @@ extension StreamController {
                  ]*/
                 ] as [String : Any]
             
+//            append media samples to a single track of an asset writer's output file
             self.videoInput = AVAssetWriterInput(mediaType: AVMediaType.video,
                                                  outputSettings: videoSettings)
             self.audioInput = AVAssetWriterInput(mediaType: AVMediaType.audio,
                                                  outputSettings: audioSettings)
-            
+//           if a real time media source is in use
             self.videoInput?.expectsMediaDataInRealTime = true
             self.audioInput?.expectsMediaDataInRealTime = true
             
+//           if the receiver can add a given input. Adds an input to the receiver
             if self.assetWriter!.canAdd(self.videoInput!) {
                 self.assetWriter?.add(self.videoInput!)
             }
@@ -162,6 +162,7 @@ extension StreamController {
                 self.session.addOutput(self.videoOutput)
             }
             
+//            first connection in the connections array with an input port of a specified media type.
             self.videoConnection = self.videoOutput.connection(with: AVMediaType.video)
             /*if self.videoConnection?.isVideoStabilizationSupported == true {
              self.videoConnection?.preferredVideoStabilizationMode = .auto
@@ -197,9 +198,9 @@ extension StreamController {
                 return
             }
             
-            DispatchQueue.main.async {
-                completionHandler(nil)
-            }
+//            DispatchQueue.main.async {
+//                completionHandler(nil)
+//            }
         }
     }
     
@@ -307,29 +308,40 @@ extension StreamController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCapt
             self.assetWriter?.startSession(atSourceTime: presentationTime)
             self.isRecordingSessionStarted = true
         }
-        
+
         let description = CMSampleBufferGetFormatDescription(sampleBuffer)!
         
         if CMFormatDescriptionGetMediaType(description) == kCMMediaType_Audio {
             self.encoder.encodeWithSampleBuffer(sampleBuffer)
-
+            
+//      indicates the readiness of the input to accept more media data
             if self.audioInput!.isReadyForMoreMediaData {
                 #if DEBUG
-//                print("appendSampleBuffer audio")
+                print("appendSampleBuffer audio")
                 #endif
                 self.audioInput?.append(sampleBuffer)
-                if !self.audioInput!.append(sampleBuffer) {
+                if self.audioInput!.append(sampleBuffer) == false{
                     print("Error writing audio buffer")
+                }
+                if !session.isRunning {
+                    #if DEBUG
+                    print("Session cancelled")
+                    #endif
                 }
             }
         } else {
             if self.videoInput!.isReadyForMoreMediaData {
                 #if DEBUG
-//                print("appendSampleBuffer video")
+                print("appendSampleBuffer video")
                 #endif
-                self.videoInput?.append(sampleBuffer)
-                if !self.videoInput!.append(sampleBuffer) {
+                self.videoInput?.append(sampleBuffer) // Appends samples to the receiver
+                if self.videoInput!.append(sampleBuffer) == false {
                     print("Error writing video buffer")
+                }
+                if !session.isRunning {
+                    #if DEBUG
+                    print("Session cancelled")
+                    #endif
                 }
             }
         }
