@@ -111,11 +111,7 @@ class PeerConnection {
         }
     }
     
-    func sendUDP(data: NSData) {
-        //        encode
-        //               let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.count))
-        //               let frameData = VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.count)
-        //               sendUDP(data: frameData)
+    func sendUDP(data: NSData) {        
         guard connection != nil else {
             return
         }
@@ -204,19 +200,19 @@ class PeerConnection {
 
 // MARK: VideoEncoderDelegate
 
-extension PeerConnection: VideoEncoderDelegate {
-
-    func handle(spsppsData: Data) {
-
-//        sendData(data: spsppsData as NSData)
-
-    }
-
-    func encode(data: Data, isKeyFrame: Bool) {
+//extension PeerConnection: VideoEncoderDelegate {
+//
+//    func handle(spsppsData: Data) {
+//
+////        sendData(data: spsppsData as NSData)
+//
+//    }
+//
+//    func encode(data: Data, isKeyFrame: Bool) {
 
 //        sendData(data: data as NSData)
 
-    }
+//    }
 
 //    func sendData(data: NSData) {
 //        let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.count))

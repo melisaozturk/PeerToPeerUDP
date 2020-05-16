@@ -155,7 +155,6 @@ extension StreamController {
             }
             
             self.session.startRunning()
-            
             self.session.beginConfiguration()
             
             if self.session.canAddOutput(self.videoOutput) {
@@ -324,12 +323,6 @@ extension StreamController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCapt
                 print("appendSampleBuffer audio")
                 #endif
                 self.audioInput?.append(sampleBuffer)
-//                if !session.isRunning {
-//                    #if DEBUG
-//                    print("Session cancelled")
-//                    #endif
-//                }
-                
             }
         } else {
           
@@ -341,11 +334,6 @@ extension StreamController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCapt
                 #if DEBUG
                 print("appendSampleBuffer video")
                 #endif
-//                if !session.isRunning {
-//                    #if DEBUG
-//                    print("Session cancelled")
-//                    #endif
-//                }
             }
         }
     }
