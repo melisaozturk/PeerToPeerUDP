@@ -24,18 +24,17 @@ class Frame {
 class VideoTransporter {
     
     static let shared = VideoTransporter()
-
-      let bufferLength = 1000
-      let frameIDSize = MemoryLayout<UInt16>.size
-      let segmentIDSize = MemoryLayout<UInt16>.size
-
-      lazy var frames = [Frame]()
-      var frameID: UInt16 = 0
-      var segmentID: UInt16 = 100
-      var currentFrameID: UInt16!
-      var mutableFrameBufferData: NSMutableData = NSMutableData()
-      var sendDataAllCount = 0
     
+    let bufferLength = 1000
+    let frameIDSize = MemoryLayout<UInt16>.size
+    let segmentIDSize = MemoryLayout<UInt16>.size
+    
+    lazy var frames = [Frame]()
+    var frameID: UInt16 = 0
+    var segmentID: UInt16 = 100
+    var currentFrameID: UInt16!
+    var mutableFrameBufferData: NSMutableData = NSMutableData()
+    var sendDataAllCount = 0
     
     func sendVideoBuffer(_ videoBuffer: UnsafeMutablePointer <UInt8>, length size: Int){
         
@@ -81,16 +80,10 @@ class VideoTransporter {
                 
                 print("frameData: \((frameData as Data).count), AllCount: \(sendDataAllCount)")
                 
-                                
-                    sharedConnection?.sendUDP(data: frameData)
+                if let connection = sharedConnection {
+                    connection.sendUDP(frame: frameData as Data)
+                }
                 
-                
-//                let message = NWProtocolFramer.Message(videoMessageType: .url)
-//                let context = NWConnection.ContentContext(identifier: "Move",
-//                                                          metadata: [message])
-//                if let sharedConnection = sharedConnection {
-//                   sharedConnection.connection!.send(content: frameData as Data,  contentContext: context, isComplete: true, completion: .idempotent)
-//                }
 //                socket.send(frameData as Data, toAddress: address, withTimeout: -1, tag: 0)
 //                return frameData as Data
             }
@@ -111,21 +104,13 @@ class VideoTransporter {
             
             print("frameData.length: \(frameData.length), AllCount: \(sendDataAllCount)")
             
-            
-//            sharedConnection?.sendUDP(frameData as Data)
-
-//            let message = NWProtocolFramer.Message(videoMessageType: .url)
-//            let context = NWConnection.ContentContext(identifier: "Move",
-//                                                      metadata: [message])
-//            if let sharedConnection = sharedConnection {
-//                sharedConnection.connection!.send(content: frameData,  contentContext: context, isComplete: true, completion: .idempotent)
-//            }
-                            //         Create a message object to hold the command type.
-            //                connection.send(content: data, contentContext: context, isComplete: true, completion: .idempotent)
-                    
 //            socket.send(frameData as Data, toAddress: address, withTimeout: -1, tag: 0)         
-           
-                sharedConnection?.sendUDP(data: frameData)
+//          send frame if there is a connection
+            if let connection = sharedConnection {
+                connection.sendUDP(frame: frameData as Data)
+            }
+            
+//                sharedConnection?.sendUDP(data: frameData)
             //            return frameData as Data
         }
         

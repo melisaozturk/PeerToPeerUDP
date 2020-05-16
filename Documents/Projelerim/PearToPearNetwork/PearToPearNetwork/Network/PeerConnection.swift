@@ -111,7 +111,7 @@ class PeerConnection {
         }
     }
     
-    func sendUDP(data: NSData) {        
+    func sendUDP(frame: Data) {
         guard connection != nil else {
             return
         }
@@ -120,7 +120,7 @@ class PeerConnection {
         let context = NWConnection.ContentContext(identifier: "Move",
                                                   metadata: [message])
         
-        connection!.send(content: data,  contentContext: context, isComplete: true, completion: .idempotent)
+        connection!.send(content: frame,  contentContext: context, isComplete: true, completion: .idempotent)
     }
     
     // Handle sending a  message.

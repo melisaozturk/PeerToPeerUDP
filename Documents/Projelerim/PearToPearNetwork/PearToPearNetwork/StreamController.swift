@@ -223,11 +223,9 @@ extension StreamController {
         } else if self.assetWriter?.startWriting() != true {
             print("error: \(self.assetWriter?.error.debugDescription ?? "")")
         }
-        else {
-            self.videoOutput.setSampleBufferDelegate(self, queue: self.recordingQueue)
-            self.audioOutput.setSampleBufferDelegate(self, queue: self.recordingQueue)
-            displayPreview(on: view)
-        }
+        self.videoOutput.setSampleBufferDelegate(self, queue: self.recordingQueue)
+        self.audioOutput.setSampleBufferDelegate(self, queue: self.recordingQueue)
+        displayPreview(on: view)
     }
     
     func stopRecording() {
@@ -317,6 +315,7 @@ extension StreamController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCapt
         if CMFormatDescriptionGetMediaType(description) == kCMMediaType_Audio {
             guard CMSampleBufferDataIsReady(sampleBuffer) else { print("CMSampleBufferData Not Ready"); return }
             self.encoder.encodeWithSampleBuffer(sampleBuffer)
+         
 //      indicates the readiness of the input to accept more media data
             if self.audioInput!.isReadyForMoreMediaData {
                 #if DEBUG
