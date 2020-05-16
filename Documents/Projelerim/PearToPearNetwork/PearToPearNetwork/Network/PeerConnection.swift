@@ -110,6 +110,23 @@ class PeerConnection {
             print("Got it")
         }
     }
+    
+    func sendUDP(data: NSData) {
+        //        encode
+        //               let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.count))
+        //               let frameData = VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.count)
+        //               sendUDP(data: frameData)
+        guard connection != nil else {
+            return
+        }
+        
+        let message = NWProtocolFramer.Message(videoMessageType: .url)
+        let context = NWConnection.ContentContext(identifier: "Move",
+                                                  metadata: [message])
+        
+        connection!.send(content: data,  contentContext: context, isComplete: true, completion: .idempotent)
+    }
+    
     // Handle sending a  message.
 //    func sendUDP(_ data: NSData) {
 //        guard connection != nil else {
@@ -206,20 +223,20 @@ extension PeerConnection: VideoEncoderDelegate {
 //        VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.count)
 //
 //    }
-        func sendUDP(data: NSData) {
+//        func sendUDP(data: NSData) {
     //        encode
 //               let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.count))
 //               let frameData = VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.count)
 //               sendUDP(data: frameData)
-               guard connection != nil else {
-                   return
-               }
+//               guard connection != nil else {
+//                   return
+//               }
+//
+//               let message = NWProtocolFramer.Message(videoMessageType: .url)
+//               let context = NWConnection.ContentContext(identifier: "Move",
+//                                                         metadata: [message])
                
-               let message = NWProtocolFramer.Message(videoMessageType: .url)
-               let context = NWConnection.ContentContext(identifier: "Move",
-                                                         metadata: [message])
-               
-               connection!.send(content: data,  contentContext: context, isComplete: true, completion: .idempotent)
-           }
+//               connection!.send(content: data,  contentContext: context, isComplete: true, completion: .idempotent)
+//           }
 
 }

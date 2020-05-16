@@ -81,6 +81,7 @@ class VideoTransporter {
                 
                 print("frameData: \((frameData as Data).count), AllCount: \(sendDataAllCount)")
                 
+                                
                     sharedConnection?.sendUDP(data: frameData)
                 
                 

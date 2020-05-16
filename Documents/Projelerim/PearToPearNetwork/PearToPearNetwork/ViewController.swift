@@ -35,6 +35,7 @@ class ViewController: UIViewController {
        
         tableView.register(UINib(nibName: "TableViewCell", bundle: Bundle.main), forCellReuseIdentifier: "VideoCell")
         tableView.register(UINib(nibName: "HostTableViewCell", bundle: Bundle.main), forCellReuseIdentifier: "HostCell")
+       
         sharedBrowser = PeerBrowser(delegate: self)
                 
         configureCameraController()
@@ -221,6 +222,7 @@ extension ViewController {
     
     private func startHosting() {
         streamController.startRecording(view: self.videoView)
+        
         lblStatus.text = "RECORDING.."
         btnStop.isEnabled = true
     }
