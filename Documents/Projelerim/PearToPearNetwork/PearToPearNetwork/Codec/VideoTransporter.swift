@@ -108,9 +108,7 @@ class VideoTransporter {
             pc.sendUDP(frame: frameData as Data)
             
         }
-        
         frameID = (frameID + 1) % 1000
-//        return Data()
     }
     
   
