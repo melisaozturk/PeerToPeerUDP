@@ -36,7 +36,8 @@ class VideoTransporter {
       var mutableFrameBufferData: NSMutableData = NSMutableData()
       var sendDataAllCount = 0
     
-    func sendVideoBuffer(_ videoBuffer: UnsafeMutablePointer <UInt8>, length size: Int) -> Data{
+    
+    func sendVideoBuffer(_ videoBuffer: UnsafeMutablePointer <UInt8>, length size: Int){
         
         if size > bufferLength {
             
@@ -80,6 +81,9 @@ class VideoTransporter {
                 
                 print("frameData: \((frameData as Data).count), AllCount: \(sendDataAllCount)")
                 
+                    sharedConnection?.sendUDP(data: frameData)
+                
+                
 //                let message = NWProtocolFramer.Message(videoMessageType: .url)
 //                let context = NWConnection.ContentContext(identifier: "Move",
 //                                                          metadata: [message])
@@ -87,7 +91,7 @@ class VideoTransporter {
 //                   sharedConnection.connection!.send(content: frameData as Data,  contentContext: context, isComplete: true, completion: .idempotent)
 //                }
 //                socket.send(frameData as Data, toAddress: address, withTimeout: -1, tag: 0)
-                return frameData as Data
+//                return frameData as Data
             }
             
         } else {
@@ -106,6 +110,7 @@ class VideoTransporter {
             
             print("frameData.length: \(frameData.length), AllCount: \(sendDataAllCount)")
             
+            
 //            sharedConnection?.sendUDP(frameData as Data)
 
 //            let message = NWProtocolFramer.Message(videoMessageType: .url)
@@ -117,12 +122,14 @@ class VideoTransporter {
                             //         Create a message object to hold the command type.
             //                connection.send(content: data, contentContext: context, isComplete: true, completion: .idempotent)
                     
-//            socket.send(frameData as Data, toAddress: address, withTimeout: -1, tag: 0)
-            return frameData as Data
+//            socket.send(frameData as Data, toAddress: address, withTimeout: -1, tag: 0)         
+           
+                sharedConnection?.sendUDP(data: frameData)
+            //            return frameData as Data
         }
         
         frameID = (frameID + 1) % 1000
-        return Data()
+//        return Data()
     }
     
     // VideoPreviewer

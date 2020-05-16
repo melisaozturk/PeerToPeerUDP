@@ -317,7 +317,7 @@ extension StreamController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCapt
       
         if CMFormatDescriptionGetMediaType(description) == kCMMediaType_Audio {
             guard CMSampleBufferDataIsReady(sampleBuffer) else { print("CMSampleBufferData Not Ready"); return }
-                  self.encoder.encodeWithSampleBuffer(sampleBuffer)
+            self.encoder.encodeWithSampleBuffer(sampleBuffer)
 //      indicates the readiness of the input to accept more media data
             if self.audioInput!.isReadyForMoreMediaData {
                 #if DEBUG
@@ -329,8 +329,11 @@ extension StreamController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCapt
 //                    print("Session cancelled")
 //                    #endif
 //                }
+                
             }
         } else {
+          
+            
             guard CMSampleBufferDataIsReady(sampleBuffer) else { print("CMSampleBufferData Not Ready"); return }
                   self.encoder.encodeWithSampleBuffer(sampleBuffer)
             if self.videoInput!.isReadyForMoreMediaData {

@@ -30,8 +30,9 @@ class PeerConnection {
         self.delegate = delegate
         self.initiatedConnection = true
 //        self.encoder?.delegate = self
-//        let connection = NWConnection(to: endpoint, using: .udp)
-//        self.connection = connection
+        let connection = NWConnection(to: endpoint, using: .udp)
+        self.connection = connection
+        
         VideoTransporter.shared.sendDataAllCount = 0
 
         startConnection()
@@ -45,6 +46,12 @@ class PeerConnection {
         self.initiatedConnection = false
 //        self.encoder?.delegate = self
 //        startConnection()
+    }
+    
+    init(endpoint: NWEndpoint) {
+        self.initiatedConnection = true
+        let connection = NWConnection(to: endpoint, using: .udp)
+        self.connection = connection
     }
     
     // Handle starting the peer-to-peer connection for both inbound and outbound connections.
@@ -77,7 +84,7 @@ class PeerConnection {
 //                self.receiveUDP(connection)
 //                if let delegate = self.delegate {
 //                    delegate.connectionReady()
-//                }                
+//                }
             case .setup:
                 print("State: Setup\n")
             case .cancelled:
@@ -201,9 +208,9 @@ extension PeerConnection: VideoEncoderDelegate {
 //    }
         func sendUDP(data: NSData) {
     //        encode
-               let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.count))
-               let frameData = VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.count)
-               
+//               let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.count))
+//               let frameData = VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.count)
+//               sendUDP(data: frameData)
                guard connection != nil else {
                    return
                }
@@ -212,7 +219,7 @@ extension PeerConnection: VideoEncoderDelegate {
                let context = NWConnection.ContentContext(identifier: "Move",
                                                          metadata: [message])
                
-               connection!.send(content: frameData,  contentContext: context, isComplete: true, completion: .idempotent)
+               connection!.send(content: data,  contentContext: context, isComplete: true, completion: .idempotent)
            }
 
 }

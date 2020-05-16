@@ -416,7 +416,12 @@ class VideoEncoder: NSObject {
         encodeData.append(headerData as Data)
 
         encodeData.append(data as Data)
-
+        
+        let nsEncodedData = encodeData as NSData
+        
+        let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: nsEncodedData.bytes.bindMemory(to: UInt8.self, capacity: nsEncodedData.count))
+        VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: encodeData.count)
+        
         delegate?.encode(data: encodeData, isKeyFrame: isKeyFrame)
 
     }

@@ -121,7 +121,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.lblInfo.text = "Searching for videos..."
             } else {
                 let peerEndpoint = results[indexPath.row].endpoint
-                
                 if case let NWEndpoint.service(name: name, type: _, domain: _, interface: _) = peerEndpoint {
                     cell.lblInfo.text = name
                 } else {
