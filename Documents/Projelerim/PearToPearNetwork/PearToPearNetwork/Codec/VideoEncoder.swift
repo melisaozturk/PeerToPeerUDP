@@ -57,8 +57,12 @@ class VideoEncoder: NSObject {
 
     func encodeWithSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
 
-        guard let pixelbuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+        guard let pixelbuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+            return            
+        }
 
+//        guard let audioPixelbuffer = CMSampleBufferGetAudio
+        
         if compressionSession == nil {
 
             let width = CVPixelBufferGetWidth(pixelbuffer)

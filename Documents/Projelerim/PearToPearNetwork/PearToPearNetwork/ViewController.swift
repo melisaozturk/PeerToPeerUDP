@@ -155,14 +155,14 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             }
         case .join:
             if !results.isEmpty {
-                // Handle the user tapping on a discovered cideo
+                // Handle the user tapping on a discovered video
 //                join a video session - see the streaming video
                let result = results[indexPath.row]
                     sharedConnection = PeerConnection(endpoint: result.endpoint,
                                                       interface:  result.interfaces.first,
                                                           delegate: self)
                 sharedConnection!.receiveUDP(sharedConnection!.connection!)
-                    
+                
                     #if DEBUG
                     print("You have just joined a session ..")
                     #endif

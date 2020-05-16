@@ -23,13 +23,13 @@ class PeerConnection {
     weak var delegate: PeerConnectionDelegate?    
     var hostUDP: NWEndpoint.Host = "192.168.4.1"
     var portUDP: NWEndpoint.Port = 5555
-    var encoder: VideoEncoder?
+//    var encoder: VideoEncoder?
     
     // Create an outbound connection when the user initiates a video.
     init(endpoint: NWEndpoint, interface: NWInterface?, delegate: PeerConnectionDelegate) {
         self.delegate = delegate
         self.initiatedConnection = true
-        self.encoder?.delegate = self
+//        self.encoder?.delegate = self
 //        let connection = NWConnection(to: endpoint, using: .udp)
 //        self.connection = connection
         VideoTransporter.shared.sendDataAllCount = 0
@@ -43,8 +43,8 @@ class PeerConnection {
         self.delegate = delegate
         self.connection = connection
         self.initiatedConnection = false
-        self.encoder?.delegate = self
-        startConnection()
+//        self.encoder?.delegate = self
+//        startConnection()
     }
     
     // Handle starting the peer-to-peer connection for both inbound and outbound connections.
@@ -77,7 +77,7 @@ class PeerConnection {
 //                self.receiveUDP(connection)
 //                if let delegate = self.delegate {
 //                    delegate.connectionReady()
-//                }
+//                }                
             case .setup:
                 print("State: Setup\n")
             case .cancelled:
@@ -122,10 +122,10 @@ class PeerConnection {
 //                self.delegate?.receivedMessage(content: data, message: videoMessage)
                 print("Did receive, size: \(data.count)")
             }
-            if let videoMessage = context?.protocolMetadata(definition: VideoProtocol.definition) as? NWProtocolFramer.Message {
-                self.delegate?.receivedMessage(content: data, message: videoMessage)
-                print("Did receive, size: \(data!.count), videoMessage: \(videoMessage)")
-            }
+//            if let videoMessage = context?.protocolMetadata(definition: VideoProtocol.definition) as? NWProtocolFramer.Message {
+//                self.delegate?.receivedMessage(content: data, message: videoMessage)
+//                print("Did receive, size: \(data!.count), videoMessage: \(videoMessage)")
+//            }
             if let error = error {
                 self.connectionDidFail(error: error)
                 return
@@ -184,20 +184,35 @@ extension PeerConnection: VideoEncoderDelegate {
 
     func handle(spsppsData: Data) {
 
-        sendData(data: spsppsData as NSData)
+//        sendData(data: spsppsData as NSData)
 
     }
 
     func encode(data: Data, isKeyFrame: Bool) {
 
-        sendData(data: data as NSData)
+//        sendData(data: data as NSData)
 
     }
 
-    func sendData(data: NSData) {
-        let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.count))
-        VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.count)
-
-    }
+//    func sendData(data: NSData) {
+//        let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.count))
+//        VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.count)
+//
+//    }
+        func sendUDP(data: NSData) {
+    //        encode
+               let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.count))
+               let frameData = VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.count)
+               
+               guard connection != nil else {
+                   return
+               }
+               
+               let message = NWProtocolFramer.Message(videoMessageType: .url)
+               let context = NWConnection.ContentContext(identifier: "Move",
+                                                         metadata: [message])
+               
+               connection!.send(content: frameData,  contentContext: context, isComplete: true, completion: .idempotent)
+           }
 
 }

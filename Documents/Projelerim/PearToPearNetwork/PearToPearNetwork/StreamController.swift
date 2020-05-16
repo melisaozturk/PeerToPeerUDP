@@ -219,14 +219,16 @@ extension StreamController {
     
     
     func startRecording(view: UIView) {
-        
-        if self.assetWriter?.startWriting() != true {
+        if self.isCameraRecording {
+            print("Camera is recording ..")
+        } else if self.assetWriter?.startWriting() != true {
             print("error: \(self.assetWriter?.error.debugDescription ?? "")")
         }
-        
-        self.videoOutput.setSampleBufferDelegate(self, queue: self.recordingQueue)
-        self.audioOutput.setSampleBufferDelegate(self, queue: self.recordingQueue)
-        displayPreview(on: view)
+        else {
+            self.videoOutput.setSampleBufferDelegate(self, queue: self.recordingQueue)
+            self.audioOutput.setSampleBufferDelegate(self, queue: self.recordingQueue)
+            displayPreview(on: view)
+        }
     }
     
     func stopRecording() {
@@ -234,6 +236,7 @@ extension StreamController {
         self.audioOutput.setSampleBufferDelegate(nil, queue: nil)
         
         self.assetWriter?.finishWriting {
+            self.isCameraRecording = false
             print("Saved in folder \(self.recordingURL!)")
             self.session.stopRunning()
             try? PHPhotoLibrary.shared().performChangesAndWait {
@@ -307,42 +310,39 @@ extension StreamController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCapt
             let presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
             self.assetWriter?.startSession(atSourceTime: presentationTime)
             self.isRecordingSessionStarted = true
+            self.isCameraRecording = true
         }
 
         let description = CMSampleBufferGetFormatDescription(sampleBuffer)!
-        
+      
         if CMFormatDescriptionGetMediaType(description) == kCMMediaType_Audio {
-            self.encoder.encodeWithSampleBuffer(sampleBuffer)
-            
+            guard CMSampleBufferDataIsReady(sampleBuffer) else { print("CMSampleBufferData Not Ready"); return }
+                  self.encoder.encodeWithSampleBuffer(sampleBuffer)
 //      indicates the readiness of the input to accept more media data
             if self.audioInput!.isReadyForMoreMediaData {
                 #if DEBUG
                 print("appendSampleBuffer audio")
                 #endif
                 self.audioInput?.append(sampleBuffer)
-                if self.audioInput!.append(sampleBuffer) == false{
-                    print("Error writing audio buffer")
-                }
-                if !session.isRunning {
-                    #if DEBUG
-                    print("Session cancelled")
-                    #endif
-                }
+//                if !session.isRunning {
+//                    #if DEBUG
+//                    print("Session cancelled")
+//                    #endif
+//                }
             }
         } else {
+            guard CMSampleBufferDataIsReady(sampleBuffer) else { print("CMSampleBufferData Not Ready"); return }
+                  self.encoder.encodeWithSampleBuffer(sampleBuffer)
             if self.videoInput!.isReadyForMoreMediaData {
+                self.videoInput?.append(sampleBuffer) // Appends samples to the receiver
                 #if DEBUG
                 print("appendSampleBuffer video")
                 #endif
-                self.videoInput?.append(sampleBuffer) // Appends samples to the receiver
-                if self.videoInput!.append(sampleBuffer) == false {
-                    print("Error writing video buffer")
-                }
-                if !session.isRunning {
-                    #if DEBUG
-                    print("Session cancelled")
-                    #endif
-                }
+//                if !session.isRunning {
+//                    #if DEBUG
+//                    print("Session cancelled")
+//                    #endif
+//                }
             }
         }
     }
