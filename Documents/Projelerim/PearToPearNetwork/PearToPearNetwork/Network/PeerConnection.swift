@@ -45,7 +45,7 @@ class PeerConnection {
         self.connection = connection
         self.initiatedConnection = false
 //        self.encoder?.delegate = self
-//        startConnection()
+        startConnection()
     }
     
     init(endpoint: NWEndpoint) {
@@ -81,7 +81,7 @@ class PeerConnection {
                 print("State: Ready\n")
 //                self.receiveNextMessage()
                 // Notify your delegate that the connection is ready.
-//                self.receiveUDP(connection)
+                self.receiveUDP(connection)
 //                if let delegate = self.delegate {
 //                    delegate.connectionReady()
 //                }
@@ -123,29 +123,14 @@ class PeerConnection {
         connection!.send(content: frame,  contentContext: context, isComplete: true, completion: .idempotent)
     }
     
-    // Handle sending a  message.
-//    func sendUDP(_ data: NSData) {
-//        guard connection != nil else {
-//            return
-//        }
-//
-//        let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.count))
-//        VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.count)
-//
-//    }
-    
     
     // Receive a message, deliver it to your delegate, and continue receiving more messages.
     func receiveUDP(_ connection: NWConnection) {
         connection.receiveMessage { (data, context, isComplete, error) in
-            if let data = data, !data.isEmpty {
-//                self.delegate?.receivedMessage(content: data, message: videoMessage)
-                print("Did receive, size: \(data.count)")
+            if let videoMessage = context?.protocolMetadata(definition: VideoProtocol.definition) as? NWProtocolFramer.Message,  let data = data, !data.isEmpty  {
+                self.delegate?.receivedMessage(content: data, message: videoMessage)
+                print("Did receive, size: \(data.count), videoMessage: \(videoMessage)")
             }
-//            if let videoMessage = context?.protocolMetadata(definition: VideoProtocol.definition) as? NWProtocolFramer.Message {
-//                self.delegate?.receivedMessage(content: data, message: videoMessage)
-//                print("Did receive, size: \(data!.count), videoMessage: \(videoMessage)")
-//            }
             if let error = error {
                 self.connectionDidFail(error: error)
                 return
@@ -168,71 +153,4 @@ class PeerConnection {
 //            exit(0)
         }
        
-//        connection.receiveMessage { (content, context, isComplete, error) in
-//            // Extract your message type from the received context.
-//            if let videoMessage = context?.protocolMetadata(definition: VideoProtocol.definition) as? NWProtocolFramer.Message {
-//                self.delegate?.receivedMessage(content: content, message: videoMessage)
-//            }
-//            if error == nil {
-//                // Continue to receive more messages until you receive and error.
-//                self.receiveNextMessage()
-//            }
-//        }
-//    }
-    
-    // Receive a message, deliver it to your delegate, and continue receiving more messages.
-//    func receiveNextMessage() {
-//
-//        connection!.receiveMessage { (content, context, isComplete, error) in
-//            // Extract your message type from the received context.
-//            if let videoMessage = context?.protocolMetadata(definition: VideoProtocol.definition) as? NWProtocolFramer.Message {
-//                self.delegate?.receivedMessage(content: content, message: videoMessage)
-//            }
-//            if error == nil {
-//                // Continue to receive more messages until you receive and error.
-//                self.receiveNextMessage()
-//            }
-//        }
-//    }
-    
 }
-
-
-// MARK: VideoEncoderDelegate
-
-//extension PeerConnection: VideoEncoderDelegate {
-//
-//    func handle(spsppsData: Data) {
-//
-////        sendData(data: spsppsData as NSData)
-//
-//    }
-//
-//    func encode(data: Data, isKeyFrame: Bool) {
-
-//        sendData(data: data as NSData)
-
-//    }
-
-//    func sendData(data: NSData) {
-//        let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.count))
-//        VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.count)
-//
-//    }
-//        func sendUDP(data: NSData) {
-    //        encode
-//               let videoBuffer = UnsafeMutablePointer<UInt8>(mutating: data.bytes.bindMemory(to: UInt8.self, capacity: data.count))
-//               let frameData = VideoTransporter.shared.sendVideoBuffer(videoBuffer, length: data.count)
-//               sendUDP(data: frameData)
-//               guard connection != nil else {
-//                   return
-//               }
-//
-//               let message = NWProtocolFramer.Message(videoMessageType: .url)
-//               let context = NWConnection.ContentContext(identifier: "Move",
-//                                                         metadata: [message])
-               
-//               connection!.send(content: data,  contentContext: context, isComplete: true, completion: .idempotent)
-//           }
-
-//}
