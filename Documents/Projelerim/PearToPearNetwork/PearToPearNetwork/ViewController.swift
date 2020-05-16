@@ -221,7 +221,7 @@ extension ViewController: PeerConnectionDelegate {
 extension ViewController {
     
     private func startHosting() {
-        streamController.startRecording(view: self.videoView)
+        streamController.startRecording(view: self.videoView)        
         lblStatus.text = "RECORDING.."
         btnStop.isEnabled = true
     }

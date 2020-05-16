@@ -19,16 +19,16 @@ protocol PeerConnectionDelegate: class {
 
 class PeerConnection {
     var connection: NWConnection?
-    let initiatedConnection: Bool
+//    let initiatedConnection: Bool?
     weak var delegate: PeerConnectionDelegate?    
     var hostUDP: NWEndpoint.Host = "192.168.4.1"
     var portUDP: NWEndpoint.Port = 5555
 //    var encoder: VideoEncoder?
-    
+    var result: NWBrowser.Result?
     // Create an outbound connection when the user initiates a video.
     init(endpoint: NWEndpoint, interface: NWInterface?, delegate: PeerConnectionDelegate) {
         self.delegate = delegate
-        self.initiatedConnection = true
+//        self.initiatedConnection = true
 //        self.encoder?.delegate = self
         let connection = NWConnection(to: endpoint, using: .udp)
         self.connection = connection
@@ -43,15 +43,13 @@ class PeerConnection {
     init(connection: NWConnection, delegate: PeerConnectionDelegate) {
         self.delegate = delegate
         self.connection = connection
-        self.initiatedConnection = false
+//        self.initiatedConnection = false
 //        self.encoder?.delegate = self
         startConnection()
     }
     
-    init(endpoint: NWEndpoint) {
-        self.initiatedConnection = true
-        let connection = NWConnection(to: endpoint, using: .udp)
-        self.connection = connection
+    init() {
+        
     }
     
     // Handle starting the peer-to-peer connection for both inbound and outbound connections.
@@ -120,7 +118,7 @@ class PeerConnection {
         let context = NWConnection.ContentContext(identifier: "Move",
                                                   metadata: [message])
         
-        connection!.send(content: frame,  contentContext: context, isComplete: true, completion: .idempotent)
+        connection!.send(content: frame,  contentContext: context, isComplete: true, completion: .idempotent)        
         print("SUCCESS")
     }
     
