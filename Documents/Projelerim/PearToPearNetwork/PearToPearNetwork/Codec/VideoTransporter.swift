@@ -105,7 +105,7 @@ class VideoTransporter {
             print("frameData.length: \(frameData.length), AllCount: \(sendDataAllCount)")
             
 //            socket.send(frameData as Data, toAddress: address, withTimeout: -1, tag: 0)         
-//          send frame if there is a connection
+
             if let connection = sharedConnection {
                 connection.sendUDP(frame: frameData as Data)
             }

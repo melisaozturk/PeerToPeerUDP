@@ -319,7 +319,7 @@ extension StreamController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCapt
 //      indicates the readiness of the input to accept more media data
             if self.audioInput!.isReadyForMoreMediaData {
                 #if DEBUG
-                print("appendSampleBuffer audio")
+//                print("appendSampleBuffer audio")
                 #endif
                 self.audioInput?.append(sampleBuffer)
             }
@@ -331,7 +331,7 @@ extension StreamController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCapt
             if self.videoInput!.isReadyForMoreMediaData {
                 self.videoInput?.append(sampleBuffer) // Appends samples to the receiver
                 #if DEBUG
-                print("appendSampleBuffer video")
+//                print("appendSampleBuffer video")
                 #endif
             }
         }

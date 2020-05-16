@@ -121,6 +121,7 @@ class PeerConnection {
                                                   metadata: [message])
         
         connection!.send(content: frame,  contentContext: context, isComplete: true, completion: .idempotent)
+        print("SUCCESS")
     }
     
     
