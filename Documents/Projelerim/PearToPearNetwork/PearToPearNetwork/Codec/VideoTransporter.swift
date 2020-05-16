@@ -102,7 +102,7 @@ class VideoTransporter {
             
             sendDataAllCount += frameData.length
             
-            print("frameData.length: \(frameData.length), AllCount: \(sendDataAllCount)")
+//            print("frameData.length: \(frameData.length), AllCount: \(sendDataAllCount)")
             
 //            socket.send(frameData as Data, toAddress: address, withTimeout: -1, tag: 0)         
 

@@ -164,7 +164,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 sharedConnection!.receiveUDP(sharedConnection!.connection!)
                 
                     #if DEBUG
-                    print("You have just joined a session ..")
+//                    print("You have just joined a session ..")
                     #endif
                 
             }
@@ -232,7 +232,7 @@ extension ViewController {
                  print(error)
              }
          }
-         self.streamController.displayPreview(on: self.videoView)
+//         self.streamController.displayPreview(on: self.videoView)
      }
      
 }

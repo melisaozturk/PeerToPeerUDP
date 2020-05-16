@@ -221,7 +221,7 @@ extension StreamController {
         if self.isCameraRecording {
             print("Camera is recording ..")
         } else if self.assetWriter?.startWriting() != true {
-            print("error: \(self.assetWriter?.error.debugDescription ?? "")")
+            print("assetWriter error: \(self.assetWriter?.error.debugDescription ?? "")")
         }
         self.videoOutput.setSampleBufferDelegate(self, queue: self.recordingQueue)
         self.audioOutput.setSampleBufferDelegate(self, queue: self.recordingQueue)
