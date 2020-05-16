@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1E59D5D1246FFEF5005B2E58 /* PeerListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E59D5D0246FFEF5005B2E58 /* PeerListViewController.swift */; };
 		1E8B889524677FB20092B22D /* StreamController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8B889424677FB20092B22D /* StreamController.swift */; };
 		1ECF51F9246477C400330B7A /* PeerBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECF51F8246477C400330B7A /* PeerBrowser.swift */; };
 		1ECF51FB246478AF00330B7A /* PeerListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECF51FA246478AF00330B7A /* PeerListener.swift */; };
@@ -47,7 +46,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1E59D5D0246FFEF5005B2E58 /* PeerListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerListViewController.swift; sourceTree = "<group>"; };
 		1E8B889424677FB20092B22D /* StreamController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamController.swift; sourceTree = "<group>"; };
 		1ECF51F8246477C400330B7A /* PeerBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerBrowser.swift; sourceTree = "<group>"; };
 		1ECF51FA246478AF00330B7A /* PeerListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerListener.swift; sourceTree = "<group>"; };
@@ -118,7 +116,6 @@
 				1ECF51FA246478AF00330B7A /* PeerListener.swift */,
 				1ECF51FC246479C200330B7A /* PeerConnection.swift */,
 				1ECF520024647C6E00330B7A /* VideoProtocol.swift */,
-				1E59D5D0246FFEF5005B2E58 /* PeerListViewController.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -329,7 +326,6 @@
 				1ECF51FD246479C200330B7A /* PeerConnection.swift in Sources */,
 				1ECF51FB246478AF00330B7A /* PeerListener.swift in Sources */,
 				1EE444D8246323EB00B3D18B /* SceneDelegate.swift in Sources */,
-				1E59D5D1246FFEF5005B2E58 /* PeerListViewController.swift in Sources */,
 				1EFBF736246C732500CB2053 /* VideoTransporter.swift in Sources */,
 				1ECF520124647C6E00330B7A /* VideoProtocol.swift in Sources */,
 				1EFBF734246C626200CB2053 /* VideoEncoder.swift in Sources */,
