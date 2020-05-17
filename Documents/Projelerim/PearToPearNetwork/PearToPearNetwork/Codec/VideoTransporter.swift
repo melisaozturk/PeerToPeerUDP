@@ -22,7 +22,7 @@ class Frame {
 }
 
 class VideoTransporter {
-    
+
     static let shared = VideoTransporter()
     
     let bufferLength = 1000
@@ -35,6 +35,11 @@ class VideoTransporter {
     var currentFrameID: UInt16!
     var mutableFrameBufferData: NSMutableData = NSMutableData()
     var sendDataAllCount = 0
+    let pc = PeerConnection()
+
+        init() {
+            pc.startConnection()
+        }
     
     func sendVideoBuffer(_ videoBuffer: UnsafeMutablePointer <UInt8>, length size: Int){
         
@@ -81,9 +86,8 @@ class VideoTransporter {
 //                print("frameData: \((frameData as Data).count), AllCount: \(sendDataAllCount)")
 
 //              ????
-                let pc = PeerConnection()
-                pc.startConnection()
                 pc.sendUDP(frame: frameData as Data)
+                
             }
             
         } else {
@@ -103,8 +107,7 @@ class VideoTransporter {
 //            print("frameData.length: \(frameData.length), AllCount: \(sendDataAllCount)")
                      
 //              ????
-            let pc = PeerConnection()
-            pc.startConnection()
+            
             pc.sendUDP(frame: frameData as Data)
             
         }
@@ -113,7 +116,15 @@ class VideoTransporter {
     
   
     
-    
+//    @objc func getConnection(_ notification: Notification) {
+//        if let dict = notification.userInfo as NSDictionary? {
+//            if let result = dict["result"] as? NWBrowser.Result {
+//                sharedConnection = PeerConnection(endpoint: result.endpoint,
+//                                                  interface:  result.interfaces.first,
+//                                                  delegate: self)
+//            }
+//        }
+//    }
     
 //    // VideoPreviewer
 //
@@ -246,3 +257,13 @@ class VideoTransporter {
 //    }
 }
 
+
+extension VideoTransporter: PeerConnectionDelegate {
+    // When a connection becomes ready, move into video mode.
+    func connectionReady() {}
+    // Ignore connection failures and messages prior to starting a video.
+    func connectionFailed() {}
+    func receivedMessage(content: Data?, message: NWProtocolFramer.Message) {
+        
+    }
+}
